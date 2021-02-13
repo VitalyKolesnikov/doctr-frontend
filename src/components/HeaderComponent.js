@@ -12,12 +12,12 @@ class HeaderComponent extends Component {
         super(props)
 
         this.state = {
-
         }
     }
 
     render() {
         const isUserLoggedIn = AuthService.isUserLoggedIn();
+        const user = JSON.parse(localStorage.getItem('user'));
 
         const renderTooltip = props => (
             <Tooltip {...props}>Logout</Tooltip>
@@ -37,6 +37,12 @@ class HeaderComponent extends Component {
                             {/* <li><Link className="nav-link" to="/patients">Patients</Link></li> */}
                         </ul>
                         <ul className="navbar-nav navbar-collapse justify-content-end">
+                            {isUserLoggedIn &&
+                                <li>
+                                    <Link className="nav-link" to="/patients">
+                                        {user.firstName} {user.lastName}
+                                    </Link>
+                                </li>}
                             {
                                 isUserLoggedIn &&
                                 <li>

@@ -26,7 +26,7 @@ class PatientListComponent extends Component {
     render() {
         return (
             <div>
-                <h2 className="text-center">Patients List</h2>
+                <h2 className="text-center">Patients</h2>
                 <div className="row">
                     <button className="btn btn-primary" onClick={this.addPatient}>+ Add</button>
                 </div>

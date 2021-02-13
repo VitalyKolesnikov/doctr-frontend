@@ -34,7 +34,7 @@ class LoginComponent extends Component {
         AuthService
             .login(this.state.username, this.state.password)
             .then((response) => {
-                this.props.history.push(`/patients`)
+                this.props.history.push('/patients')
             }).catch(() => {
                 this.setState({ hasLoginFailed: true })
             })
