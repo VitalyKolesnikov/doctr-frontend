@@ -15,11 +15,11 @@ function App() {
         <HeaderComponent />
         <div className="container">
           <Switch>
-            <Route path="/" exact component={LoginComponent} />
-            <Route path="/login" exact component={LoginComponent} />
+            <AuthenticatedRoute exact path="/" component={PatientListComponent} />
+            <Route exact path="/login" component={LoginComponent} />
             <AuthenticatedRoute path="/logout" exact component={LogoutComponent} />
-            <AuthenticatedRoute path="/patients" component={PatientListComponent}></AuthenticatedRoute>
-            <AuthenticatedRoute path="/add-patient" component={CreatePatientComponent}></AuthenticatedRoute>
+            <AuthenticatedRoute path="/patients" component={PatientListComponent} />
+            <AuthenticatedRoute path="/add-patient" component={CreatePatientComponent} />
           </Switch>
         </div>
         <FooterComponent />

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom'
 import AuthService from '../services/AuthService';
 import { FaSignOutAlt } from 'react-icons/fa';
+import { FaTooth } from 'react-icons/fa';
+import { GiTooth } from 'react-icons/gi';
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 
@@ -25,7 +27,12 @@ class HeaderComponent extends Component {
             <div>
                 <header>
                     <nav className="navbar navbar-expand-md navbar-dark bg-dark">
-                        <div><a href="/patients" className="navbar-brand">DoctR</a></div>
+                        <div>
+                            <a href="/patients" className="navbar-brand">
+                                <FaTooth />
+                                &nbsp;DoctR
+                            </a>
+                        </div>
                         <ul className="navbar-nav">
                             {/* <li><Link className="nav-link" to="/patients">Patients</Link></li> */}
                         </ul>

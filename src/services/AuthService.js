@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const { REACT_APP_API_URL } = process.env;
-const API_URL = REACT_APP_API_URL + "/api/v1/auth/login";
+const { REACT_APP_API_HOST } = process.env;
+const API_URL = REACT_APP_API_HOST + "/api/v1/auth/login";
 
 class AuthService {
   async login(username, password) {
