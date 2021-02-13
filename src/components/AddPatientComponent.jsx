@@ -17,23 +17,18 @@ class AddPatientComponent extends Component {
             info: ''
         }
 
-        this.onChange = this.onChange.bind(this);
-        this.onDateChange = this.onDateChange.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.savePatient = this.savePatient.bind(this);
 
     }
 
-    onChange = e => {
-        const { name, value } = e.target;
-        this.setState({
-            [name]: value
-        })
-    }
-
-    onDateChange(event) {
-        this.setState({
-            birthDate: event.target.value
-        })
+    handleChange(event) {
+        this.setState(
+            {
+                [event.target.name]
+                    : event.target.value
+            }
+        )
     }
 
     savePatient = (e) => {
@@ -77,17 +72,17 @@ class AddPatientComponent extends Component {
                                     <div className="form-group">
                                         <label>First Name:</label>
                                         <input placeholder="First Name" name="firstName" className="form-control"
-                                            value={this.state.firstName} onChange={this.onChange} required />
+                                            value={this.state.firstName} onChange={this.handleChange} required />
                                     </div>
                                     <div className="form-group">
                                         <label>Middle Name:</label>
                                         <input placeholder="Middle Name" name="middleName" className="form-control"
-                                            value={this.state.middleName} onChange={this.onChange} />
+                                            value={this.state.middleName} onChange={this.handleChange} />
                                     </div>
                                     <div className="form-group">
                                         <label>Last Name:</label>
                                         <input placeholder="Last Name" name="lastName" className="form-control"
-                                            value={this.state.lastName} onChange={this.onChange} required />
+                                            value={this.state.lastName} onChange={this.handleChange} required />
                                     </div>
                                     <div className="form-group">
                                         <label>Birth Date:</label>
@@ -99,13 +94,13 @@ class AddPatientComponent extends Component {
                                             }}
                                             name="birthDate"
                                             value={this.state.birthDate}
-                                            onChange={this.onDateChange}
+                                            onChange={this.handleChange}
                                         />
                                     </div>
                                     <div className="form-group">
                                         <label>Email:</label>
                                         <input type="email" placeholder="Email Address" name="email" className="form-control"
-                                            value={this.state.email} onChange={this.onChange} />
+                                            value={this.state.email} onChange={this.handleChange} />
                                     </div>
                                     <div className="form-group">
                                         <label>Phone:</label>
@@ -114,13 +109,13 @@ class AddPatientComponent extends Component {
                                             allowEmptyFormatting mask="_"
                                             name="phone"
                                             value={this.state.phone}
-                                            onChange={this.onChange}
+                                            onChange={this.handleChange}
                                         />
                                     </div>
                                     <div className="form-group">
                                         <label>Info:</label>
                                         <input placeholder="Info" name="info" className="form-control"
-                                            value={this.state.info} onChange={this.onChange} />
+                                            value={this.state.info} onChange={this.handleChange} />
                                     </div>
 
                                     <button type="submit" className="btn btn-success">Save</button>
