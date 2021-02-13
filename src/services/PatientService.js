@@ -10,6 +10,10 @@ class PatientService {
         return axios.get(PATIENTS_REST_ENDPOINT, { headers: authHeader() });
     }
 
+    addPatient(patient) {
+        return axios.post(PATIENTS_REST_ENDPOINT, patient, { headers: authHeader() });
+    }
+
 }
 
 export default new PatientService();

@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import PatientService from '../services/PatientService';
+import Cleave from 'cleave.js/react';
+import NumberFormat from 'react-number-format';
 
-class CreatePatientComponent extends Component {
+class AddPatientComponent extends Component {
     constructor(props) {
         super(props)
 
@@ -13,15 +16,24 @@ class CreatePatientComponent extends Component {
             phone: '',
             info: ''
         }
-        this.changeFirstNameHandler = this.changeFirstNameHandler.bind(this);
-        this.changeMiddleNameHandler = this.changeMiddleNameHandler.bind(this);
-        this.changeLastNameHandler = this.changeLastNameHandler.bind(this);
-        this.changeBirthDateHandler = this.changeBirthDateHandler.bind(this);
-        this.changeEmailHandler = this.changeEmailHandler.bind(this);
-        this.changePhoneHandler = this.changePhoneHandler.bind(this);
-        this.changeInfoHandler = this.changeInfoHandler.bind(this);
 
+        this.onChange = this.onChange.bind(this);
+        this.onDateChange = this.onDateChange.bind(this);
         this.savePatient = this.savePatient.bind(this);
+
+    }
+
+    onChange = e => {
+        const { name, value } = e.target;
+        this.setState({
+            [name]: value
+        })
+    }
+
+    onDateChange(event) {
+        this.setState({
+            birthDate: event.target.value
+        })
     }
 
     savePatient = (e) => {
@@ -31,34 +43,10 @@ class CreatePatientComponent extends Component {
             email: this.state.email, phone: this.state.phone, info: this.state.info
         };
         console.log('patient => ' + JSON.stringify(patient));
-    }
 
-    changeFirstNameHandler = (event) => {
-        this.setState({ firstName: event.target.value });
-    }
-
-    changeMiddleNameHandler = (event) => {
-        this.setState({ middleName: event.target.value });
-    }
-
-    changeLastNameHandler = (event) => {
-        this.setState({ lastName: event.target.value });
-    }
-
-    changeBirthDateHandler = (event) => {
-        this.setState({ birthDate: event.target.value });
-    }
-
-    changeEmailHandler = (event) => {
-        this.setState({ email: event.target.value });
-    }
-
-    changePhoneHandler = (event) => {
-        this.setState({ phone: event.target.value });
-    }
-
-    changeInfoHandler = (event) => {
-        this.setState({ info: event.target.value });
+        PatientService.addPatient(patient).then(res => {
+            this.props.history.push('/patients');
+        })
     }
 
     cancel() {
@@ -67,9 +55,9 @@ class CreatePatientComponent extends Component {
 
     // getTitle(){
     //     if(this.state.id === '_add'){
-    //         return <h3 className="text-center">Add Employee</h3>
+    //         return <h3 className="text-center">Add patient</h3>
     //     }else{
-    //         return <h3 className="text-center">Update Employee</h3>
+    //         return <h3 className="text-center">Update patient</h3>
     //     }
     // }
 
@@ -80,49 +68,62 @@ class CreatePatientComponent extends Component {
                 <div className="container">
                     <div className="row">
                         <div className="card col-md-6 offset-md-3 offset-md-3">
-                        <br></br>
-                            {   
+                            <br></br>
+                            {
                                 <h3 className="text-center">Add patient</h3>
                             }
                             <div className="card-body">
-                                <form>
+                                <form onSubmit={this.savePatient}>
                                     <div className="form-group">
                                         <label>First Name:</label>
                                         <input placeholder="First Name" name="firstName" className="form-control"
-                                            value={this.state.firstName} onChange={this.changeFirstNameHandler} />
+                                            value={this.state.firstName} onChange={this.onChange} required />
                                     </div>
                                     <div className="form-group">
                                         <label>Middle Name:</label>
                                         <input placeholder="Middle Name" name="middleName" className="form-control"
-                                            value={this.state.middleName} onChange={this.changeMiddleNameHandler} />
+                                            value={this.state.middleName} onChange={this.onChange} />
                                     </div>
                                     <div className="form-group">
                                         <label>Last Name:</label>
                                         <input placeholder="Last Name" name="lastName" className="form-control"
-                                            value={this.state.lastName} onChange={this.changeLastNameHandler} />
+                                            value={this.state.lastName} onChange={this.onChange} required />
                                     </div>
                                     <div className="form-group">
                                         <label>Birth Date:</label>
-                                        <input placeholder="Birth Date" name="birthDate" className="form-control"
-                                            value={this.state.birthDate} onChange={this.changeBirthDateHandler} />
+                                        <Cleave placeholder="dd.mm.yyyy" className="form-control"
+                                            options={{
+                                                date: true,
+                                                delimiter: '.',
+                                                datePattern: ['d', 'm', 'Y']
+                                            }}
+                                            name="birthDate"
+                                            value={this.state.birthDate}
+                                            onChange={this.onDateChange}
+                                        />
                                     </div>
                                     <div className="form-group">
                                         <label>Email:</label>
-                                        <input placeholder="Email Address" name="email" className="form-control"
-                                            value={this.state.email} onChange={this.changeEmailHandler} />
+                                        <input type="email" placeholder="Email Address" name="email" className="form-control"
+                                            value={this.state.email} onChange={this.onChange} />
                                     </div>
                                     <div className="form-group">
                                         <label>Phone:</label>
-                                        <input placeholder="Phone number" name="phone" className="form-control"
-                                            value={this.state.phone} onChange={this.changePhoneHandler} />
+                                        <NumberFormat className="form-control"
+                                            format="+7(###)###-####"
+                                            allowEmptyFormatting mask="_"
+                                            name="phone"
+                                            value={this.state.phone}
+                                            onChange={this.onChange}
+                                        />
                                     </div>
                                     <div className="form-group">
                                         <label>Info:</label>
                                         <input placeholder="Info" name="info" className="form-control"
-                                            value={this.state.info} onChange={this.changeInfoHandler} />
+                                            value={this.state.info} onChange={this.onChange} />
                                     </div>
 
-                                    <button className="btn btn-success" onClick={this.savePatient}>Save</button>
+                                    <button type="submit" className="btn btn-success">Save</button>
                                     <button className="btn btn-danger" onClick={this.cancel.bind(this)} style={{ marginLeft: "10px" }}>Cancel</button>
                                 </form>
                             </div>
@@ -136,4 +137,4 @@ class CreatePatientComponent extends Component {
     }
 }
 
-export default CreatePatientComponent;
+export default AddPatientComponent;

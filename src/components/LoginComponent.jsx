@@ -29,7 +29,8 @@ class LoginComponent extends Component {
         )
     }
 
-    loginClicked() {
+    loginClicked(e) {
+        e.preventDefault();
         AuthService
             .login(this.state.username, this.state.password)
             .then((response) => {
@@ -43,7 +44,7 @@ class LoginComponent extends Component {
         return (
 
             <div className="Login col-6">
-                <Form>
+                <Form onSubmit={this.loginClicked}>
                     <Form.Group controlId="username">
                         <Form.Label>Username</Form.Label>
                         <Form.Control
@@ -63,26 +64,13 @@ class LoginComponent extends Component {
                         />
                     </Form.Group>
                     <Form.Group>
-                    <Button className="btn btn-success" onClick={this.loginClicked}>
+                    <Button type="submit" className="btn btn-success">
                         Login
                     </Button>
                     </Form.Group>
                     {this.state.hasLoginFailed && <div className="row alert alert-danger">Invalid login/password</div>}
                 </Form>
             </div>
-
-            // <div>
-            //     <h1>Login</h1>
-            //     <div className="container">
-            //         {/*<ShowInvalidCredentials hasLoginFailed={this.state.hasLoginFailed}/>*/}
-            //         {this.state.hasLoginFailed && <div className="alert alert-warning">Invalid Credentials</div>}
-            //         {this.state.showSuccessMessage && <div>Login Sucessful</div>}
-            //         {/*<ShowLoginSuccessMessage showSuccessMessage={this.state.showSuccessMessage}/>*/}
-            //         User Name: <input type="text" name="username" value={this.state.username} onChange={this.handleChange} />
-            //         Password: <input type="password" name="password" value={this.state.password} onChange={this.handleChange} />
-            //         <button className="btn btn-success" onClick={this.loginClicked}>Login</button>
-            //     </div>
-            // </div>
         )
     }
 }

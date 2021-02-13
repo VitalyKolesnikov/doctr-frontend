@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import PatientListComponent from './components/PatientListComponent';
 import HeaderComponent from './components/HeaderComponent.js';
 import FooterComponent from './components/FooterComponent.js';
-import CreatePatientComponent from './components/CreatePatientComponent';
+import AddPatientComponent from './components/AddPatientComponent';
 import LoginComponent from './components/LoginComponent.jsx';
 import LogoutComponent from './components/LogoutComponent.jsx';
 import AuthenticatedRoute from './components/AuthenticatedRoute.jsx';
@@ -19,7 +19,7 @@ function App() {
             <Route exact path="/login" component={LoginComponent} />
             <AuthenticatedRoute path="/logout" exact component={LogoutComponent} />
             <AuthenticatedRoute path="/patients" component={PatientListComponent} />
-            <AuthenticatedRoute path="/add-patient" component={CreatePatientComponent} />
+            <AuthenticatedRoute path="/add-patient" component={AddPatientComponent} />
           </Switch>
         </div>
         <FooterComponent />
