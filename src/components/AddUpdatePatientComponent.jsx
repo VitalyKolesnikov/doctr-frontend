@@ -35,7 +35,6 @@ class AddUpdatePatientComponent extends Component {
 
     componentDidMount() {
 
-        // step 4
         if (this.state.id === '_add') {
             return
         } else {
@@ -84,14 +83,6 @@ class AddUpdatePatientComponent extends Component {
     cancel() {
         this.props.history.push('/patients');
     }
-
-    // getTitle(){
-    //     if(this.state.id === '_add'){
-    //         return <h3 className="text-center">Add patient</h3>
-    //     }else{
-    //         return <h3 className="text-center">Update patient</h3>
-    //     }
-    // }
 
     render() {
         return (

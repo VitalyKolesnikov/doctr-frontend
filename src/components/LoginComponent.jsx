@@ -33,8 +33,8 @@ class LoginComponent extends Component {
         e.preventDefault();
         AuthService
             .login(this.state.username, this.state.password)
-            .then((response) => {
-                this.props.history.push('/patients')
+            .then(() => {
+                this.props.history.push('/patients');
             }).catch(() => {
                 this.setState({ hasLoginFailed: true })
             })
@@ -64,8 +64,8 @@ class LoginComponent extends Component {
                         />
                     </Form.Group>
                     <Form.Group>
-                    <Button type="submit" className="btn btn-success">
-                        Login
+                        <Button type="submit" className="btn btn-success">
+                            Login
                     </Button>
                     </Form.Group>
                     {this.state.hasLoginFailed && <div className="row alert alert-danger">Invalid login/password</div>}

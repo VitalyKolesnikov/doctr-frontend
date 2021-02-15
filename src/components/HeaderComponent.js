@@ -5,6 +5,7 @@ import { FaSignOutAlt } from 'react-icons/fa';
 import { FaTooth } from 'react-icons/fa';
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
+import { Navbar, Nav } from 'react-bootstrap';
 
 class HeaderComponent extends Component {
     constructor(props) {
@@ -21,35 +22,36 @@ class HeaderComponent extends Component {
         return (
             <div>
                 <header>
-                    <nav className="navbar navbar-expand-md navbar-dark bg-dark">
-                        <div>
-                            <a href="/patients" className="navbar-brand">
-                                <FaTooth />
-                                &nbsp;DoctR
-                            </a>
-                        </div>
-                        <ul className="navbar-nav">
-                            {/* <li><Link className="nav-link" to="/patients">Patients</Link></li> */}
-                        </ul>
-                        <ul className="navbar-nav navbar-collapse justify-content-end">
+                    <Navbar bg="dark" variant="dark" expand="md" className="py-0">
+                        <Navbar.Brand href="/patients" className="navbar-brand">
+                            <FaTooth />&nbsp;DoctR
+                            </Navbar.Brand>
+                        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+
+                        {isUserLoggedIn &&
+                            <Nav className="mr-auto">
+                                <Nav.Link href="/patients">Patients</Nav.Link>
+                            </Nav>}
+
+                        <Navbar.Collapse className="justify-content-end">
                             {isUserLoggedIn &&
-                                <li>
-                                    <Link className="nav-link" to="/patients">
+                                <Nav>
+                                    <Nav.Link className="nav-link" href="/patients">
                                         {user.firstName} {user.lastName}
-                                    </Link>
-                                </li>}
-                            {
-                                isUserLoggedIn &&
-                                <li>
-                                    <Link className="nav-link" to="/logout" onClick={AuthService.logout}>
+                                    </Nav.Link>
+                                </Nav>}
+
+                            {isUserLoggedIn &&
+                                <Nav>
+                                    <Nav.Link href="/logout" onClick={AuthService.logout}>
                                         <OverlayTrigger placement="left" overlay={<Tooltip>Logout</Tooltip>}>
                                             <FaSignOutAlt />
                                         </OverlayTrigger>
-                                    </Link>
-                                </li>
-                            }
-                        </ul>
-                    </nav>
+                                    </Nav.Link>
+                                </Nav>}
+
+                        </Navbar.Collapse>
+                    </Navbar>
                     <br></br>
                 </header>
             </div>

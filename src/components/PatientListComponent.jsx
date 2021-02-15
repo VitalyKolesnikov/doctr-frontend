@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import PatientService from '../services/PatientService';
 import { FaEdit } from 'react-icons/fa';
+import { MdDelete } from 'react-icons/md';
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 
@@ -12,13 +13,24 @@ class PatientListComponent extends Component {
         this.state = {
             patients: []
         }
-        // this.deletePatient = this.deletePatient.bind(this);
+        this.editPatient = this.editPatient.bind(this);
+        this.deletePatient = this.deletePatient.bind(this);
     }
 
     componentDidMount() {
         PatientService.getPatients().then((response) => {
             this.setState({ patients: response.data });
         })
+    }
+
+    editPatient(id) {
+        this.props.history.push(`/add-update-patient/${id}`);
+    }
+
+    deletePatient(id) {
+        PatientService.deletePatient(id).then(res => {
+            this.setState({ patients: this.state.patients.filter(patient => patient.id !== id) });
+        });
     }
 
     render() {
@@ -32,7 +44,7 @@ class PatientListComponent extends Component {
                 </div>
                 <br></br>
                 <div className="row">
-                    <table className="table table-striped table-bordered">
+                    <table className="table table-striped table-bordered table-sm">
                         <thead>
                             <tr>
                                 <th>Last Name</th>
@@ -51,19 +63,32 @@ class PatientListComponent extends Component {
                                 this.state.patients.map(
                                     patient =>
                                         <tr key={patient.id}>
-                                            <td>{patient.lastName}</td>
-                                            <td>{patient.firstName}</td>
-                                            <td>{patient.middleName}</td>
-                                            <td>{patient.birthDate}</td>
-                                            <td>{patient.email}</td>
-                                            <td>{patient.phone}</td>
-                                            <td>{patient.info}</td>
+                                            <td className="align-middle">{patient.lastName}</td>
+                                            <td className="align-middle">{patient.firstName}</td>
+                                            <td className="align-middle">{patient.middleName}</td>
+                                            <td className="align-middle">{patient.birthDate}</td>
+                                            <td className="align-middle">{patient.email}</td>
+                                            <td className="align-middle">{patient.phone}</td>
+                                            <td className="align-middle">{patient.info}</td>
                                             <td>
-                                                <Link className="nav-link" to={'/add-update-patient/' + patient.id} >
-                                                    <OverlayTrigger placement="top" overlay={<Tooltip>Edit</Tooltip>}>
+                                                <OverlayTrigger placement="top" overlay={<Tooltip>Edit</Tooltip>}>
+                                                    <button onClick={() => this.editPatient(patient.id)} className="btn btn-info btn-sm"
+                                                        style={{ marginLeft: "30px" }}>
                                                         <FaEdit />
-                                                    </OverlayTrigger>
-                                                </Link>
+                                                    </button>
+                                                </OverlayTrigger>
+
+                                                <OverlayTrigger placement="top" overlay={<Tooltip>Remove</Tooltip>}>
+                                                    <button onClick={() => {
+                                                        if (window.confirm('Are you sure?')) {
+                                                            this.deletePatient(patient.id)
+                                                        }
+                                                    }}
+                                                        className="btn btn-danger btn-sm"
+                                                        style={{ marginLeft: "30px" }}>
+                                                        <MdDelete />
+                                                    </button>
+                                                </OverlayTrigger>
                                             </td>
                                         </tr>
                                 )
