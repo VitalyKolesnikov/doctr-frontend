@@ -14,6 +14,18 @@ class PatientService {
         return axios.post(PATIENTS_REST_ENDPOINT, patient, { headers: authHeader() });
     }
 
+    getPatientById(patientId){
+        return axios.get(PATIENTS_REST_ENDPOINT + patientId, { headers: authHeader() });
+    }
+
+    updatePatient(patient, patientId){
+        return axios.put(PATIENTS_REST_ENDPOINT + patientId, patient, { headers: authHeader() });
+    }
+
+    deletePatient(patientId){
+        return axios.delete(PATIENTS_REST_ENDPOINT + patientId, { headers: authHeader() });
+    }
+
 }
 
 export default new PatientService();

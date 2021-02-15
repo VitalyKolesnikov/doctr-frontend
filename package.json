@@ -14,6 +14,7 @@
     "bootstrap": "^4.6.0",
     "cleave.js": "^1.6.0",
     "dotenv": "^8.2.0",
+    "formik": "^2.2.6",
     "moment": "^2.29.1",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.3",
@@ -29,7 +30,8 @@
     "react-validation": "^3.0.7",
     "text-mask-addons": "^3.8.0",
     "validator": "^13.5.2",
-    "web-vitals": "^1.1.0"
+    "web-vitals": "^1.1.0",
+    "yup": "^0.32.8"
   },
   "scripts": {
     "start": "REACT_APP_API_HOST='http://192.168.31.241:8080' react-scripts start",

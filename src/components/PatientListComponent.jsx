@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom'
 import PatientService from '../services/PatientService';
+import { FaEdit } from 'react-icons/fa';
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
 
 class PatientListComponent extends Component {
     constructor(props) {
@@ -8,8 +12,6 @@ class PatientListComponent extends Component {
         this.state = {
             patients: []
         }
-        this.addPatient = this.addPatient.bind(this);
-        // this.editPatient = this.editPatient.bind(this);
         // this.deletePatient = this.deletePatient.bind(this);
     }
 
@@ -19,16 +21,14 @@ class PatientListComponent extends Component {
         })
     }
 
-    addPatient() {
-        this.props.history.push('/add-patient');
-    }
-
     render() {
         return (
             <div>
                 <h2 className="text-center">Patients</h2>
                 <div className="row">
-                    <button className="btn btn-primary" onClick={this.addPatient}>+ Add</button>
+                    <Link className="nav-link" to="/add-update-patient/_add" >
+                        <button className="btn btn-primary">+ Add</button>
+                    </Link>
                 </div>
                 <br></br>
                 <div className="row">
@@ -42,6 +42,7 @@ class PatientListComponent extends Component {
                                 <th>email</th>
                                 <th>Phone</th>
                                 <th>Info</th>
+                                <th></th>
                             </tr>
                         </thead>
 
@@ -57,6 +58,13 @@ class PatientListComponent extends Component {
                                             <td>{patient.email}</td>
                                             <td>{patient.phone}</td>
                                             <td>{patient.info}</td>
+                                            <td>
+                                                <Link className="nav-link" to={'/add-update-patient/' + patient.id} >
+                                                    <OverlayTrigger placement="top" overlay={<Tooltip>Edit</Tooltip>}>
+                                                        <FaEdit />
+                                                    </OverlayTrigger>
+                                                </Link>
+                                            </td>
                                         </tr>
                                 )
                             }

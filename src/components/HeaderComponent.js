@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import AuthService from '../services/AuthService';
 import { FaSignOutAlt } from 'react-icons/fa';
 import { FaTooth } from 'react-icons/fa';
-import { GiTooth } from 'react-icons/gi';
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 
@@ -18,10 +17,6 @@ class HeaderComponent extends Component {
     render() {
         const isUserLoggedIn = AuthService.isUserLoggedIn();
         const user = JSON.parse(localStorage.getItem('user'));
-
-        const renderTooltip = props => (
-            <Tooltip {...props}>Logout</Tooltip>
-        );
 
         return (
             <div>
@@ -47,7 +42,7 @@ class HeaderComponent extends Component {
                                 isUserLoggedIn &&
                                 <li>
                                     <Link className="nav-link" to="/logout" onClick={AuthService.logout}>
-                                        <OverlayTrigger placement="left" overlay={renderTooltip}>
+                                        <OverlayTrigger placement="left" overlay={<Tooltip>Logout</Tooltip>}>
                                             <FaSignOutAlt />
                                         </OverlayTrigger>
                                     </Link>
