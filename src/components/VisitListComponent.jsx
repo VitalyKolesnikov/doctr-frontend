@@ -1,44 +1,44 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
-import PatientService from '../services/PatientService';
+import VisitService from '../services/VisitService';
 import { FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 
-class PatientListComponent extends Component {
+class VisitListComponent extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            patients: []
+            visits: []
         }
-        this.editPatient = this.editPatient.bind(this);
-        this.deletePatient = this.deletePatient.bind(this);
+        this.editVisit = this.editVisit.bind(this);
+        this.deleteVisit = this.deleteVisit.bind(this);
     }
 
     componentDidMount() {
-        PatientService.getPatients().then((response) => {
-            this.setState({ patients: response.data });
+        VisitService.getVisits().then((response) => {
+            this.setState({ visits: response.data });
         })
     }
 
-    editPatient(id) {
-        this.props.history.push(`/add-update-patient/${id}`);
+    editVisit(id) {
+        this.props.history.push(`/add-update-visit/${id}`);
     }
 
-    deletePatient(id) {
-        PatientService.deletePatient(id).then(res => {
-            this.setState({ patients: this.state.patients.filter(patient => patient.id !== id) });
+    deleteVisit(id) {
+        VisitService.deleteVisit(id).then(res => {
+            this.setState({ visits: this.state.visits.filter(visit => visit.id !== id) });
         });
     }
 
     render() {
         return (
             <div>
-                <h2 className="text-center">Patients</h2>
+                <h2 className="text-center">Visits</h2>
                 <div className="row">
-                    <Link className="nav-link" to="/add-update-patient/_add" >
+                    <Link className="nav-link" to="/add-update-visit/_add" >
                         <button className="btn btn-primary">+ Add</button>
                     </Link>
                 </div>
@@ -47,12 +47,10 @@ class PatientListComponent extends Component {
                     <table className="table table-striped table-bordered table-sm">
                         <thead>
                             <tr>
-                                <th>Last Name</th>
-                                <th>First Name</th>
-                                <th>Middle Name</th>
-                                <th>Birth Date</th>
-                                <th>email</th>
-                                <th>Phone</th>
+                                <th>Patient</th>
+                                <th>Clinic</th>
+                                <th>Date</th>
+                                <th>Sum</th>
                                 <th>Info</th>
                                 <th></th>
                             </tr>
@@ -60,19 +58,17 @@ class PatientListComponent extends Component {
 
                         <tbody>
                             {
-                                this.state.patients.map(
-                                    patient =>
-                                        <tr key={patient.id}>
-                                            <td className="align-middle">{patient.lastName}</td>
-                                            <td className="align-middle">{patient.firstName}</td>
-                                            <td className="align-middle">{patient.middleName}</td>
-                                            <td className="align-middle">{patient.birthDate}</td>
-                                            <td className="align-middle">{patient.email}</td>
-                                            <td className="align-middle">{patient.phone}</td>
-                                            <td className="align-middle">{patient.info}</td>
+                                this.state.visits.map(
+                                    visit =>
+                                        <tr key={visit.id}>
+                                            <td className="align-middle">{visit.patient.lastName} {visit.patient.firstName} {visit.patient.middleName}</td>
+                                            <td className="align-middle">{visit.clinic.name}</td>
+                                            <td className="align-middle">{visit.visitDate}</td>
+                                            <td className="align-middle">{visit.sumRub},{visit.sumKop}</td>
+                                            <td className="align-middle">{visit.info}</td>
                                             <td>
                                                 <OverlayTrigger placement="top" overlay={<Tooltip>Edit</Tooltip>}>
-                                                    <button onClick={() => this.editPatient(patient.id)} className="btn btn-info btn-sm"
+                                                    <button onClick={() => this.editVisit(visit.id)} className="btn btn-info btn-sm"
                                                         style={{ marginLeft: "35px" }}>
                                                         <FaEdit />
                                                     </button>
@@ -81,7 +77,7 @@ class PatientListComponent extends Component {
                                                 <OverlayTrigger placement="top" overlay={<Tooltip>Remove</Tooltip>}>
                                                     <button onClick={() => {
                                                         if (window.confirm('Are you sure?')) {
-                                                            this.deletePatient(patient.id)
+                                                            this.deleteVisit(visit.id)
                                                         }
                                                     }}
                                                         className="btn btn-danger btn-sm"
@@ -102,4 +98,4 @@ class PatientListComponent extends Component {
     }
 }
 
-export default PatientListComponent;
+export default VisitListComponent;

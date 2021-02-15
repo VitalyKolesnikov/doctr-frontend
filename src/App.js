@@ -1,6 +1,8 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import PatientListComponent from './components/PatientListComponent';
+import ClinicListComponent from './components/ClinicListComponent';
+import VisitListComponent from './components/VisitListComponent';
 import HeaderComponent from './components/HeaderComponent.js';
 import FooterComponent from './components/FooterComponent.js';
 import AddUpdatePatientComponent from './components/AddUpdatePatientComponent';
@@ -19,6 +21,8 @@ function App() {
             <Route exact path="/login" component={LoginComponent} />
             <AuthenticatedRoute path="/logout" exact component={LogoutComponent} />
             <AuthenticatedRoute path="/patients" component={PatientListComponent} />
+            <AuthenticatedRoute path="/clinics" component={ClinicListComponent} />
+            <AuthenticatedRoute path="/visits" component={VisitListComponent} />
             <AuthenticatedRoute path="/add-update-patient/:id" component={AddUpdatePatientComponent} />
           </Switch>
         </div>

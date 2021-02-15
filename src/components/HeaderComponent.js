@@ -33,6 +33,16 @@ class HeaderComponent extends Component {
                                 <Nav.Link href="/patients">Patients</Nav.Link>
                             </Nav>}
 
+                        {isUserLoggedIn &&
+                            <Nav className="mr-auto">
+                                <Nav.Link href="/clinics">Clinics</Nav.Link>
+                            </Nav>}
+
+                        {isUserLoggedIn &&
+                            <Nav className="mr-auto">
+                                <Nav.Link href="/visits">Visits</Nav.Link>
+                            </Nav>}
+
                         <Navbar.Collapse className="justify-content-end">
                             {isUserLoggedIn &&
                                 <Nav>
