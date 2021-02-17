@@ -1,31 +1,43 @@
-import axios from 'axios';
-import authHeader from './auth-header';
+import axios from 'axios'
+import authHeader from './auth-header'
 
-const { REACT_APP_API_HOST } = process.env;
-const PATIENTS_REST_ENDPOINT = REACT_APP_API_HOST + "/api/v1/patients/";
+const { REACT_APP_API_HOST } = process.env
+const PATIENTS_REST_ENDPOINT = REACT_APP_API_HOST + '/api/v1/patients/'
 
 class PatientService {
+  getAll() {
+    return axios.get(PATIENTS_REST_ENDPOINT, { headers: authHeader() })
+  }
 
-    getPatients() {
-        return axios.get(PATIENTS_REST_ENDPOINT, { headers: authHeader() });
-    }
+  getSuggested(part) {
+    return axios.get(PATIENTS_REST_ENDPOINT + 'suggest/' + part, {
+      headers: authHeader(),
+    })
+  }
 
-    addPatient(patient) {
-        return axios.post(PATIENTS_REST_ENDPOINT, patient, { headers: authHeader() });
-    }
+  add(patient) {
+    return axios.post(PATIENTS_REST_ENDPOINT, patient, {
+      headers: authHeader(),
+    })
+  }
 
-    getPatientById(patientId){
-        return axios.get(PATIENTS_REST_ENDPOINT + patientId, { headers: authHeader() });
-    }
+  getById(patientId) {
+    return axios.get(PATIENTS_REST_ENDPOINT + patientId, {
+      headers: authHeader(),
+    })
+  }
 
-    updatePatient(patient, patientId){
-        return axios.put(PATIENTS_REST_ENDPOINT + patientId, patient, { headers: authHeader() });
-    }
+  update(patient, patientId) {
+    return axios.put(PATIENTS_REST_ENDPOINT + patientId, patient, {
+      headers: authHeader(),
+    })
+  }
 
-    deletePatient(patientId){
-        return axios.delete(PATIENTS_REST_ENDPOINT + patientId, { headers: authHeader() });
-    }
-
+  delete(patientId) {
+    return axios.delete(PATIENTS_REST_ENDPOINT + patientId, {
+      headers: authHeader(),
+    })
+  }
 }
 
-export default new PatientService();
+export default new PatientService()
