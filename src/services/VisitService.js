@@ -9,6 +9,12 @@ class VisitService {
     return axios.get(VISITS_REST_ENDPOINT, { headers: authHeader() })
   }
 
+  getForPatient(patientId) {
+    return axios.get(VISITS_REST_ENDPOINT + 'patient/' + patientId, {
+      headers: authHeader(),
+    })
+  }
+
   add(visit) {
     return axios.post(VISITS_REST_ENDPOINT, visit, { headers: authHeader() })
   }

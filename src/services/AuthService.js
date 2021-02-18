@@ -5,14 +5,14 @@ const API_URL = REACT_APP_API_HOST + '/api/v1/auth/login'
 
 class AuthService {
   async login(username, password) {
-    const response = await axios.post(API_URL, {
+    const resp = await axios.post(API_URL, {
       username,
       password,
     })
-    if (response.data.token) {
-      localStorage.setItem('user', JSON.stringify(response.data))
+    if (resp.data.token) {
+      localStorage.setItem('user', JSON.stringify(resp.data))
     }
-    return response.data
+    return resp.data
   }
 
   logout() {

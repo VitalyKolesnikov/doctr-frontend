@@ -5,8 +5,8 @@ export default function ClinicListComponent() {
   const [clinics, setClinics] = useState([])
 
   useEffect(() => {
-    ClinicService.getAll().then((response) => {
-      setClinics(response.data)
+    ClinicService.getAll().then((resp) => {
+      setClinics(resp.data)
     })
   }, [])
 

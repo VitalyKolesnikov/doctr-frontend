@@ -1,49 +1,59 @@
 import './App.css'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import PatientListComponent from './components/patients/PatientListComponent'
+import PatientList from './components/patients/PatientList'
 import ClinicListComponent from './components/clinics/ClinicListComponent'
-import VisitListComponent from './components/visits/VisitListComponent'
-import HeaderComponent from './components/HeaderComponent.js'
-import FooterComponent from './components/FooterComponent.js'
-import AddUpdatePatientComponent from './components/patients/AddUpdatePatientComponent'
-import AddUpdateVisitComponent from './components/visits/AddUpdateVisitComponent'
+import VisitList from './components/visits/VisitList'
+import Header from './components/Header.js'
+import Footer from './components/Footer.js'
+import AddUpdatePatient from './components/patients/AddUpdatePatient'
+import AddUpdateVisit from './components/visits/AddUpdateVisit'
 import LoginComponent from './components/auth/LoginComponent.jsx'
 import AuthenticatedRoute from './components/auth/AuthenticatedRoute.jsx'
+import PatientCard from './components/patients/PatientCard'
+import VisitCard from './components/visits/VisitCard'
+import Home from './components/Home'
 
 function App() {
   return (
     <div>
       <Router>
-        <HeaderComponent />
+        <Header />
         <div className='container'>
           <Switch>
+            <AuthenticatedRoute exact path='/' component={Home} />
+            <Route exact path='/login' component={LoginComponent} />
             <AuthenticatedRoute
               exact
-              path='/'
-              component={PatientListComponent}
+              path='/patients/:id'
+              component={PatientCard}
             />
-            <Route exact path='/login' component={LoginComponent} />
-            <AuthenticatedRoute path='/logout' />
             <AuthenticatedRoute
-              path='/patients'
-              component={PatientListComponent}
+              exact
+              path='/visits/:id'
+              component={VisitCard}
             />
+            <AuthenticatedRoute path='/logout' />
+            <AuthenticatedRoute path='/patients' component={PatientList} />
             <AuthenticatedRoute
               path='/clinics'
               component={ClinicListComponent}
             />
-            <AuthenticatedRoute path='/visits' component={VisitListComponent} />
+            <AuthenticatedRoute path='/visits' component={VisitList} />
             <AuthenticatedRoute
               path='/add-update-patient/:id'
-              component={AddUpdatePatientComponent}
+              component={AddUpdatePatient}
             />
             <AuthenticatedRoute
               path='/add-update-visit/:id'
-              component={AddUpdateVisitComponent}
+              component={AddUpdateVisit}
+            />
+            <AuthenticatedRoute
+              path='/add-update-visit/:id'
+              component={AddUpdateVisit}
             />
           </Switch>
         </div>
-        <FooterComponent />
+        <Footer />
       </Router>
     </div>
   )

@@ -5,7 +5,7 @@ import Cleave from 'cleave.js/react'
 import NumberFormat from 'react-number-format'
 import Form from 'react-bootstrap/Form'
 
-export default function AddUpdatePatientComponent() {
+export default function AddUpdatePatient() {
   const history = useHistory()
   const params = useParams()
 
@@ -49,12 +49,12 @@ export default function AddUpdatePatientComponent() {
     console.log('patient => ' + JSON.stringify(patient))
 
     if (id === '_add') {
-      PatientService.add(patient).then(() => {
-        history.push('/patients')
+      PatientService.add(patient).then((resp) => {
+        history.push('/patients/' + resp.data.id)
       })
     } else {
       PatientService.update(patient, id).then(() => {
-        history.push('/patients')
+        history.push('/patients/' + id)
       })
     }
   }

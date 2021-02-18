@@ -1,0 +1,208 @@
+import { useState, useEffect } from 'react'
+import { useHistory, useParams, useLocation } from 'react-router-dom'
+import VisitService from '../../services/VisitService'
+import Form from 'react-bootstrap/Form'
+import PatientService from '../../services/PatientService'
+import ClinicService from '../../services/ClinicService'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
+import moment from 'moment'
+import buildPatientOption from '../../utils/buildPatientOption'
+
+export default function AddUpdateVisit() {
+  function useQuery() {
+    return new URLSearchParams(useLocation().search)
+  }
+
+  const history = useHistory()
+  const params = useParams()
+  const query = useQuery()
+
+  const [visitId] = useState(params.id)
+  const [clinicId, setClinicId] = useState('')
+  const [patientId, setPatientId] = useState(query.get('patientId'))
+  const [patientInfo, setPatientInfo] = useState('')
+  const [date, setDate] = useState(new Date())
+  const [cost, setCost] = useState('')
+  const [info, setInfo] = useState('')
+
+  const [clinics, setClinics] = useState([])
+
+  useEffect(() => {
+    ClinicService.getAll().then((resp) => {
+      setClinics(resp.data)
+    })
+
+    if (visitId === '_add') {
+      PatientService.getById(patientId).then((res) => {
+        let patient = res.data
+        setPatientInfo(
+          buildPatientOption(
+            patient.lastName,
+            patient.firstName,
+            patient.middleName,
+            patient.birthDate
+          )
+        )
+      })
+    } else {
+      VisitService.getById(visitId).then((res) => {
+        let visit = res.data
+        setClinicId(visit.clinic.id)
+        setPatientId(visit.patient.id)
+        setPatientInfo(
+          buildPatientOption(
+            visit.patient.lastName,
+            visit.patient.firstName,
+            visit.patient.middleName,
+            visit.patient.birthDate
+          )
+        )
+        setDate(moment(visit.date, 'DD.MM.yyyy'))
+        setCost(visit.cost / 100)
+        setInfo(visit.info)
+      })
+    }
+  }, [])
+
+  const saveVisit = (e) => {
+    e.preventDefault()
+    let visit = {
+      clinicId: clinicId,
+      patientId: patientId,
+      date: moment(date).format('DD.MM.yyyy'),
+      cost: cost * 100,
+      info: info,
+    }
+    console.log('visit => ' + JSON.stringify(visit))
+
+    if (visitId === '_add') {
+      VisitService.add(visit).then((resp) => {
+        history.push('/visits/' + resp.data.id)
+      })
+    } else {
+      visit.id = visitId
+      VisitService.update(visit, visitId).then(() => {
+        history.push('/visits/' + visitId)
+      })
+    }
+  }
+
+  const getTitle = () => {
+    if (visitId === '_add') {
+      return <h3 className='text-center'>Add visit</h3>
+    } else {
+      return <h3 className='text-center'>Edit visit</h3>
+    }
+  }
+
+  const cancel = () => {
+    history.push('/visits')
+  }
+
+  return (
+    <div>
+      <br></br>
+      <div className='container'>
+        <div className='row'>
+          <div className='card col-md-6 offset-md-3 offset-md-3'>
+            <br></br>
+            {getTitle()}
+            <div className='card-body'>
+              <Form onSubmit={saveVisit}>
+                <div className='form-group'>
+                  <label>Patient:</label>
+                  <input
+                    disabled
+                    className='form-control'
+                    value={patientInfo}
+                  />
+                </div>
+
+                <div className='form-group'>
+                  <label>* Clinic:</label>
+                  {clinics.map((val, idx) => {
+                    return (
+                      <div className='form-check' key={idx}>
+                        <input
+                          className='form-check-input'
+                          type='radio'
+                          name='clinic'
+                          id={val.id}
+                          value={val.id}
+                          onChange={() => setClinicId(val.id)}
+                          checked={val.id === clinicId}
+                          required
+                        />
+                        <label className='form-check-label' htmlFor={val.id}>
+                          {val.name}
+                        </label>
+                      </div>
+                    )
+                  })}
+                </div>
+
+                <div className='form-group'>
+                  <div>
+                    <label htmlFor='date'>* Date:</label>
+                  </div>
+                  <DatePicker
+                    className='form-control'
+                    id='date'
+                    name='date'
+                    selected={new Date(date)}
+                    dateFormat='dd.MM.yyyy'
+                    value={date}
+                    onSelect={(e) => setDate(e)}
+                    onChange={(e) => setDate(e)}
+                  />
+                </div>
+                <div className='form-group'>
+                  <label>Cost:</label>
+                  <input
+                    type='number'
+                    placeholder='Cost'
+                    name='cost'
+                    className='form-control'
+                    value={cost}
+                    onChange={(e) => setCost(e.target.value)}
+                  />
+                </div>
+                <div className='form-group'>
+                  <label>Info:</label>
+                  {/* <input
+                    placeholder='Info'
+                    name='info'
+                    className='form-control'
+                    value={info}
+                    onChange={(e) => setInfo(e.target.value)}
+                  /> */}
+                  <textarea
+                    placeholder='Info'
+                    name='info'
+                    className='form-control'
+                    value={info}
+                    onChange={(e) => setInfo(e.target.value)}
+                    rows='5'
+                  ></textarea>
+                </div>
+
+                <button type='submit' className='btn btn-success'>
+                  Save
+                </button>
+                <button
+                  className='btn btn-danger'
+                  onClick={cancel.bind(this)}
+                  style={{ marginLeft: '10px' }}
+                >
+                  Cancel
+                </button>
+              </Form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br></br>
+    </div>
+  )
+}
