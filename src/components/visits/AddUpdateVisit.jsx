@@ -25,12 +25,14 @@ export default function AddUpdateVisit() {
   const [patientInfo, setPatientInfo] = useState('')
   const [date, setDate] = useState(new Date())
   const [cost, setCost] = useState('')
-  const [percent, setPercent] = useState('')
+  const [percent, setPercent] = useState('25')
   const [child, setChild] = useState('')
   const [first, setFirst] = useState('')
   const [info, setInfo] = useState('')
 
   const [clinics, setClinics] = useState([])
+
+  const percentOptions = [25, 30]
 
   useEffect(() => {
     ClinicService.getAll().then((resp) => {
@@ -78,7 +80,7 @@ export default function AddUpdateVisit() {
       clinicId: clinicId,
       patientId: patientId,
       date: moment(date).format('DD.MM.yyyy'),
-      cost: cost.toString().replace(',', ''),
+      cost: cost.toString().replace(',', '') || 0,
       percent: percent,
       child: child,
       first: first,
@@ -182,17 +184,37 @@ export default function AddUpdateVisit() {
                     }}
                     thousandSeparator={true}
                   />
-                  <select
+                  {/* <select
                     className='form-select form-control col-4'
                     name='percent'
                     value={percent}
                     onChange={(e) => setPercent(e.target.value)}
                   >
-                    <option value='25'>25%</option>
-                    <option value='30'>30%</option>
-                  </select>
+                    <option value={25}>25%</option>
+                    <option value={30}>30%</option>
+                  </select> */}
                 </div>
 
+                {percentOptions.map((val, idx) => {
+                  return (
+                    <div className='form-check' key={idx}>
+                      <input
+                        className='form-check-input'
+                        type='radio'
+                        name='percent'
+                        id={val}
+                        value={val}
+                        onChange={() => setPercent(val)}
+                        checked={val === percent}
+                        required
+                      />
+                      <label className='form-check-label' htmlFor={val}>
+                        {val}%
+                      </label>
+                    </div>
+                  )
+                })}
+                <hr></hr>
                 <div className='form-check'>
                   <input
                     id='first'

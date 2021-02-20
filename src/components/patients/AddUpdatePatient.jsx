@@ -84,7 +84,7 @@ export default function AddUpdatePatient() {
                 <div className='form-group'>
                   <label>* Last Name:</label>
                   <input
-                    placeholder='Last Name'
+                    // placeholder='Last Name'
                     name='lastName'
                     className='form-control'
                     value={lastName}
@@ -95,7 +95,7 @@ export default function AddUpdatePatient() {
                 <div className='form-group'>
                   <label>* First Name:</label>
                   <input
-                    placeholder='First Name'
+                    // placeholder='First Name'
                     name='firstName'
                     className='form-control'
                     value={firstName}
@@ -106,7 +106,7 @@ export default function AddUpdatePatient() {
                 <div className='form-group'>
                   <label>Middle Name:</label>
                   <input
-                    placeholder='Middle Name'
+                    // placeholder='Middle Name'
                     name='middleName'
                     className='form-control'
                     value={middleName}
@@ -144,7 +144,7 @@ export default function AddUpdatePatient() {
                   <label>Email:</label>
                   <input
                     type='email'
-                    placeholder='Email'
+                    // placeholder='Email'
                     name='email'
                     className='form-control col-10'
                     value={email}
@@ -154,7 +154,7 @@ export default function AddUpdatePatient() {
                 <div className='form-group'>
                   <label>Info:</label>
                   <textarea
-                    placeholder='Info'
+                    // placeholder='Info'
                     name='info'
                     className='form-control'
                     value={info}

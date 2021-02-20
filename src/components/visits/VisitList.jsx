@@ -25,32 +25,35 @@ export default function VisitList({ patientId }) {
       {!patientId && <h2>Visits</h2>}
       <br></br>
       <div className='row'>
-        <table className='table table-striped table-bordered table-sm'>
-          <thead>
-            <tr>
-              <th>Patient</th>
-              <th>Clinic</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {visits.map((visit) => (
-              <tr key={visit.id}>
-                <td>
-                  <Link to={'/visits/' + visit.id}>
-                    {visit.patient.lastName}{' '}
-                    {makeInitials(
-                      visit.patient.firstName,
-                      visit.patient.middleName
-                    )}
-                  </Link>
-                </td>
-                <td>{visit.clinic.name}</td>
-                <td>{visit.date}</td>
+        {visits.length === 0 && <h5>No visits yet</h5>}
+        {visits.length !== 0 && (
+          <table className='table table-striped table-bordered table-sm'>
+            <thead>
+              <tr>
+                <th>Patient</th>
+                <th>Clinic</th>
+                <th>Date</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {visits.map((visit) => (
+                <tr key={visit.id}>
+                  <td>
+                    <Link to={'/visits/' + visit.id}>
+                      {visit.patient.lastName}{' '}
+                      {makeInitials(
+                        visit.patient.firstName,
+                        visit.patient.middleName
+                      )}
+                    </Link>
+                  </td>
+                  <td>{visit.clinic.name}</td>
+                  <td>{visit.date}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   )

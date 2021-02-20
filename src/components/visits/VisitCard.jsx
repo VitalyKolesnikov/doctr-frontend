@@ -30,7 +30,7 @@ export default function VisitCard() {
 
   const deleteVisit = (id) => {
     VisitService.delete(id).then(() => {
-      history.push({ pathname: '/visits' })
+      history.goBack()
     })
   }
 
@@ -41,32 +41,36 @@ export default function VisitCard() {
           <div className='card'>
             <div className='card-body'>
               <div className='row'>
-                <div className='col-3 col-lg-1'>
+                <div className='col-4 col-lg-1'>
                   <CgFile
                     style={{ paddingTop: 3, color: 'e8e24c' }}
-                    size='4em'
+                    size='5em'
                   />
-                  <FaChild
-                    color={visit.child ? '28a745' : 'efefef'}
-                    size='1.5em'
-                    style={{ paddingBottom: 2 }}
-                  />
-                  <span
-                    style={{
-                      fontWeight: 'bold',
-                      border: '3px solid',
-                      borderRadius: '5px',
-                      color: visit.first
-                        ? 'rgb(40, 167, 69)'
-                        : 'rgb(239, 239, 239)',
-                    }}
-                  >
-                    &nbsp;&nbsp;1&nbsp;&nbsp;
-                  </span>
+                  <div style={{ paddingLeft: 15 }}>
+                    <span
+                      style={{
+                        fontWeight: 'bold',
+                        border: '3px solid',
+                        borderRadius: '5px',
+                        color: visit.first
+                          ? 'rgb(40, 167, 69)'
+                          : 'rgb(239, 239, 239)',
+                      }}
+                    >
+                      &nbsp;&nbsp;1&nbsp;&nbsp;
+                    </span>
+                    <FaChild
+                      color={visit.child ? '28a745' : 'efefef'}
+                      size='1.5em'
+                      style={{ paddingBottom: 5, paddingLeft: 5 }}
+                    />
+                  </div>
                 </div>
-                <div className='col-9 col-lg-2'>
+                <div className='col-8 col-lg-2'>
                   <Link to={'/patients/' + visit.patient.id}>
-                    <h3>{visit.patient.lastName}</h3>
+                    <h3 style={{ marginBottom: -1 }}>
+                      {visit.patient.lastName}
+                    </h3>
                     <h5>
                       {visit.patient.firstName} {visit.patient.middleName}
                     </h5>

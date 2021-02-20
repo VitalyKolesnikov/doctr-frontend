@@ -37,14 +37,14 @@ export default function PatientCard() {
       <div className='card'>
         <div className='card-body'>
           <div className='row'>
-            <div className='col-3 col-lg-1'>
+            <div className='col-4 col-lg-1'>
               <BsPersonFill
                 style={{ paddingBottom: 10, color: '28a745' }}
-                size='5em'
+                size='6em'
               />
             </div>
-            <div className='col-9 col-lg-2'>
-              <h3>{patient.lastName}</h3>
+            <div className='col-8 col-lg-3'>
+              <h3 style={{ marginBottom: -1 }}>{patient.lastName}</h3>
               <h5>
                 {patient.firstName} {patient.middleName}
               </h5>
@@ -56,7 +56,7 @@ export default function PatientCard() {
           <div className='row'>
             <div className='col-8 col-lg-4'>
               <div>
-                {patient.birthDate} ({getAge(patient.birthDate)} years)
+                {patient.birthDate} {getAge(patient.birthDate)}
               </div>
 
               <div>
@@ -100,7 +100,7 @@ export default function PatientCard() {
 
       <div className='container'>
         <div className='row'>
-          <h3 style={{ paddingTop: 10 }}>Visits</h3>
+          <h3 style={{ paddingTop: 13 }}>Visits</h3>
           <Link
             className='nav-link'
             to={'/add-update-visit/_add?patientId=' + patient.id}
