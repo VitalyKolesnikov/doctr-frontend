@@ -68,7 +68,7 @@ export default function AddUpdatePatient() {
   }
 
   const cancel = () => {
-    history.push('/patients')
+    history.goBack()
   }
 
   return (
@@ -117,7 +117,7 @@ export default function AddUpdatePatient() {
                   <label>Birth Date:</label>
                   <Cleave
                     placeholder='dd.mm.yyyy'
-                    className='form-control'
+                    className='form-control col-7'
                     options={{
                       date: true,
                       delimiter: '.',
@@ -129,20 +129,9 @@ export default function AddUpdatePatient() {
                   />
                 </div>
                 <div className='form-group'>
-                  <label>Email:</label>
-                  <input
-                    type='email'
-                    placeholder='Email'
-                    name='email'
-                    className='form-control'
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-                <div className='form-group'>
                   <label>Phone:</label>
                   <NumberFormat
-                    className='form-control'
+                    className='form-control col-7'
                     format='+#(###)###-####'
                     allowEmptyFormatting
                     mask='_'
@@ -152,14 +141,26 @@ export default function AddUpdatePatient() {
                   />
                 </div>
                 <div className='form-group'>
-                  <label>Info:</label>
+                  <label>Email:</label>
                   <input
+                    type='email'
+                    placeholder='Email'
+                    name='email'
+                    className='form-control col-10'
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
+                <div className='form-group'>
+                  <label>Info:</label>
+                  <textarea
                     placeholder='Info'
                     name='info'
                     className='form-control'
                     value={info}
                     onChange={(e) => setInfo(e.target.value)}
-                  />
+                    rows='3'
+                  ></textarea>
                 </div>
 
                 <button type='submit' className='btn btn-success'>

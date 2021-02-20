@@ -1,12 +1,12 @@
 export default function buildPatientOption(
   lastName,
   firstName,
-  middleName,
-  birthDate
+  middleName
+  // birthDate
 ) {
   var result
   result = lastName + ' ' + firstName
   result += middleName ? ' ' + middleName : ''
-  result += birthDate ? ' (' + birthDate + ')' : ''
+  // result += birthDate ? ' (' + birthDate + ')' : ''
   return result
 }

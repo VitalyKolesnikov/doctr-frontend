@@ -5,8 +5,9 @@ import { Link } from 'react-router-dom'
 import VisitList from '../visits/VisitList'
 import { FaEdit } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Tooltip from 'react-bootstrap/Tooltip'
+import getAge from '../../utils/getAge'
+import { BsPersonFill } from 'react-icons/bs'
+import { CgFileAdd } from 'react-icons/cg'
 
 export default function PatientCard() {
   const history = useHistory()
@@ -36,13 +37,38 @@ export default function PatientCard() {
       <div className='card'>
         <div className='card-body'>
           <div className='row'>
-            <div className='col-8'>
+            <div className='col-3 col-lg-1'>
+              <BsPersonFill
+                style={{ paddingBottom: 10, color: '28a745' }}
+                size='5em'
+              />
+            </div>
+            <div className='col-9 col-lg-2'>
               <h3>{patient.lastName}</h3>
               <h5>
                 {patient.firstName} {patient.middleName}
               </h5>
             </div>
-            <div className='col-4'>
+          </div>
+
+          <hr></hr>
+
+          <div className='row'>
+            <div className='col-8 col-lg-4'>
+              <div>
+                {patient.birthDate} ({getAge(patient.birthDate)} years)
+              </div>
+
+              <div>
+                <a href={'mailto:' + patient.email}>{patient.email}</a>
+              </div>
+
+              <div>
+                <a href={'tel:' + patient.phone}>{patient.phone}</a>
+              </div>
+              <div>{patient.info}</div>
+            </div>
+            <div className='col-2'>
               <div className='row' style={{ paddingBottom: 15 }}>
                 <button
                   onClick={() => editPatient(patient.id)}
@@ -67,22 +93,6 @@ export default function PatientCard() {
               </div>
             </div>
           </div>
-          <hr></hr>
-          <div>
-            <h6>{patient.info}</h6>
-          </div>
-
-          <div>
-            <h6>{patient.birthDate}</h6>
-          </div>
-
-          <div>
-            <a href={'mailto:' + patient.email}>{patient.email}</a>
-          </div>
-
-          <div>
-            <a href={'tel:' + patient.phone}>{patient.phone}</a>
-          </div>
         </div>
       </div>
 
@@ -90,12 +100,14 @@ export default function PatientCard() {
 
       <div className='container'>
         <div className='row'>
-          <h3 style={{ paddingTop: 6 }}>Visits</h3>
+          <h3 style={{ paddingTop: 10 }}>Visits</h3>
           <Link
             className='nav-link'
             to={'/add-update-visit/_add?patientId=' + patient.id}
           >
-            <button className='btn btn-primary btn-sm'>+ Add</button>
+            <button className='btn btn-primary btn-sm'>
+              <CgFileAdd size='2em' />
+            </button>
           </Link>
         </div>
         <VisitList patientId={patient.id} />

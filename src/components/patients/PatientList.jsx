@@ -3,10 +3,34 @@ import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
 import PatientService from '../../services/PatientService'
 import makeInitials from '../../utils/makeInitials'
+import { BsPersonPlusFill } from 'react-icons/bs'
+import Form from 'react-bootstrap/Form'
+import { AsyncTypeahead } from 'react-bootstrap-typeahead'
+import 'react-bootstrap-typeahead/css/Typeahead.css'
+import buildPatientOption from '../../utils/buildPatientOption'
 
 export default function PatientList() {
   const history = useHistory()
   const [patients, setPatients] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [options, setOptions] = useState([])
+
+  const handleSearch = (query) => {
+    setIsLoading(true)
+
+    PatientService.getSuggested(query).then((resp) => {
+      const options = resp.data.map((i) => ({
+        id: i.id,
+        lastName: i.lastName,
+        firstName: i.firstName,
+        middleName: i.middleName,
+        birthDate: i.birthDate,
+      }))
+
+      setOptions(options)
+      setIsLoading(false)
+    })
+  }
 
   useEffect(() => {
     PatientService.getAll().then((resp) => {
@@ -16,25 +40,53 @@ export default function PatientList() {
 
   return (
     <div>
-      <h2 className='text-center'>Patients</h2>
-      <div className='row'>
-        <Link className='nav-link' to='/add-update-patient/_add'>
-          <button className='btn btn-primary'>+ Add</button>
-        </Link>
+      <div className='container'>
+        <div className='row'>
+          <h2 style={{ paddingTop: 6 }}>Patients</h2>
+          <Link className='nav-link' to='/add-update-patient/_add'>
+            <button className='btn btn-primary'>
+              <BsPersonPlusFill size='1.3em' />
+            </button>
+          </Link>
+        </div>
       </div>
+
+      <div className='row'>
+        <div className='col-12 col-lg-5' style={{ paddingTop: 8 }}>
+          <Form>
+            <div className='form-group'>
+              <AsyncTypeahead
+                id='patientSelect'
+                name='patient'
+                minLength={2}
+                onChange={(e) => history.push('/patients/' + e[0].id)}
+                isLoading={isLoading}
+                labelKey={(opt) =>
+                  buildPatientOption(
+                    opt.lastName,
+                    opt.firstName,
+                    opt.middleName
+                    // opt.birthDate
+                  )
+                }
+                onSearch={handleSearch}
+                options={options}
+                placeholder='Search'
+                highlightOnlyResult
+                inputProps={{ required: true }}
+              />
+            </div>
+          </Form>
+        </div>
+      </div>
+
       <br></br>
       <div className='row'>
         <table className='table table-striped table-bordered table-sm'>
           <thead>
             <tr>
               <th>Name</th>
-              {/* <th>First Name</th> */}
-              {/* <th>Middle Name</th> */}
               <th>Birth Date</th>
-              {/* <th>email</th> */}
-              {/* <th>Phone</th> */}
-              {/* <th>Info</th> */}
-              {/* <th></th> */}
             </tr>
           </thead>
 
@@ -47,12 +99,7 @@ export default function PatientList() {
                     {makeInitials(patient.firstName, patient.middleName)}
                   </Link>
                 </td>
-                {/* <td>{patient.firstName}</td>
-                <td>{patient.middleName}</td> */}
                 <td>{patient.birthDate}</td>
-                {/* <td>{patient.email}</td>
-                <td>{patient.phone}</td>
-                <td>{patient.info}</td> */}
               </tr>
             ))}
           </tbody>

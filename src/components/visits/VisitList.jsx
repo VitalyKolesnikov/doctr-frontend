@@ -20,18 +20,9 @@ export default function VisitList({ patientId }) {
     }
   }, [patientId])
 
-  const openVisitCard = (id) => {
-    history.push({ pathname: `/visits/${id}` })
-  }
-
   return (
     <div>
-      {!patientId && <h2 className='text-center'>Visits</h2>}
-      {/* <div className='row'>
-        <Link className='nav-link' to='/add-update-visit/_add'>
-          <button className='btn btn-primary'>+ Add</button>
-        </Link>
-      </div> */}
+      {!patientId && <h2>Visits</h2>}
       <br></br>
       <div className='row'>
         <table className='table table-striped table-bordered table-sm'>
@@ -40,12 +31,8 @@ export default function VisitList({ patientId }) {
               <th>Patient</th>
               <th>Clinic</th>
               <th>Date</th>
-              {/* <th>Cost</th> */}
-              {/* <th>Info</th> */}
-              {/* <th></th> */}
             </tr>
           </thead>
-
           <tbody>
             {visits.map((visit) => (
               <tr key={visit.id}>
@@ -60,10 +47,6 @@ export default function VisitList({ patientId }) {
                 </td>
                 <td>{visit.clinic.name}</td>
                 <td>{visit.date}</td>
-                {/* <td>
-                  <Cost value={visit.cost} />
-                </td> */}
-                {/* <td>{visit.info}</td> */}
               </tr>
             ))}
           </tbody>

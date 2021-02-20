@@ -1,8 +1,6 @@
 import AuthService from '../services/AuthService'
 import { FaSignOutAlt } from 'react-icons/fa'
 import { FaTooth } from 'react-icons/fa'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Tooltip from 'react-bootstrap/Tooltip'
 import { Navbar, Nav } from 'react-bootstrap'
 
 export default function Header() {

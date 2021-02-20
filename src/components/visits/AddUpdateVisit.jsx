@@ -8,6 +8,7 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import moment from 'moment'
 import buildPatientOption from '../../utils/buildPatientOption'
+import NumberFormat from 'react-number-format'
 
 export default function AddUpdateVisit() {
   function useQuery() {
@@ -24,6 +25,9 @@ export default function AddUpdateVisit() {
   const [patientInfo, setPatientInfo] = useState('')
   const [date, setDate] = useState(new Date())
   const [cost, setCost] = useState('')
+  const [percent, setPercent] = useState('')
+  const [child, setChild] = useState('')
+  const [first, setFirst] = useState('')
   const [info, setInfo] = useState('')
 
   const [clinics, setClinics] = useState([])
@@ -40,8 +44,8 @@ export default function AddUpdateVisit() {
           buildPatientOption(
             patient.lastName,
             patient.firstName,
-            patient.middleName,
-            patient.birthDate
+            patient.middleName
+            // patient.birthDate
           )
         )
       })
@@ -54,12 +58,15 @@ export default function AddUpdateVisit() {
           buildPatientOption(
             visit.patient.lastName,
             visit.patient.firstName,
-            visit.patient.middleName,
-            visit.patient.birthDate
+            visit.patient.middleName
+            // visit.patient.birthDate
           )
         )
         setDate(moment(visit.date, 'DD.MM.yyyy'))
-        setCost(visit.cost / 100)
+        setCost(visit.cost)
+        setPercent(visit.percent)
+        setChild(visit.child)
+        setFirst(visit.first)
         setInfo(visit.info)
       })
     }
@@ -71,7 +78,10 @@ export default function AddUpdateVisit() {
       clinicId: clinicId,
       patientId: patientId,
       date: moment(date).format('DD.MM.yyyy'),
-      cost: cost * 100,
+      cost: cost.toString().replace(',', ''),
+      percent: percent,
+      child: child,
+      first: first,
       info: info,
     }
     console.log('visit => ' + JSON.stringify(visit))
@@ -97,7 +107,7 @@ export default function AddUpdateVisit() {
   }
 
   const cancel = () => {
-    history.push('/visits')
+    history.goBack()
   }
 
   return (
@@ -105,7 +115,7 @@ export default function AddUpdateVisit() {
       <br></br>
       <div className='container'>
         <div className='row'>
-          <div className='card col-md-6 offset-md-3 offset-md-3'>
+          <div className='card col-md-6 offset-md-3'>
             <br></br>
             {getTitle()}
             <div className='card-body'>
@@ -147,7 +157,7 @@ export default function AddUpdateVisit() {
                     <label htmlFor='date'>* Date:</label>
                   </div>
                   <DatePicker
-                    className='form-control'
+                    className='form-control col-6'
                     id='date'
                     name='date'
                     selected={new Date(date)}
@@ -159,24 +169,59 @@ export default function AddUpdateVisit() {
                 </div>
                 <div className='form-group'>
                   <label>Cost:</label>
-                  <input
-                    type='number'
+                  <NumberFormat
+                    className='form-control col-5'
                     placeholder='Cost'
                     name='cost'
-                    className='form-control'
                     value={cost}
                     onChange={(e) => setCost(e.target.value)}
+                    onKeyPress={(e) => {
+                      if (e.key === '.') {
+                        e.preventDefault()
+                      }
+                    }}
+                    thousandSeparator={true}
                   />
+                  <select
+                    className='form-select form-control col-4'
+                    name='percent'
+                    value={percent}
+                    onChange={(e) => setPercent(e.target.value)}
+                  >
+                    <option value='25'>25%</option>
+                    <option value='30'>30%</option>
+                  </select>
                 </div>
+
+                <div className='form-check'>
+                  <input
+                    id='first'
+                    className='form-check-input'
+                    type='checkbox'
+                    name='first'
+                    checked={first}
+                    onChange={(e) => setFirst(e.target.checked)}
+                  />
+                  <label className='form-check-label' htmlFor='first'>
+                    First visit
+                  </label>
+                </div>
+                <div className='form-check'>
+                  <input
+                    id='child'
+                    className='form-check-input'
+                    type='checkbox'
+                    name='child'
+                    checked={child}
+                    onChange={(e) => setChild(e.target.checked)}
+                  />
+                  <label className='form-check-label' htmlFor='child'>
+                    Child
+                  </label>
+                </div>
+                <br></br>
                 <div className='form-group'>
                   <label>Info:</label>
-                  {/* <input
-                    placeholder='Info'
-                    name='info'
-                    className='form-control'
-                    value={info}
-                    onChange={(e) => setInfo(e.target.value)}
-                  /> */}
                   <textarea
                     placeholder='Info'
                     name='info'
