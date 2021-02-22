@@ -4,8 +4,9 @@ import VisitService from '../../services/VisitService'
 import Form from 'react-bootstrap/Form'
 import PatientService from '../../services/PatientService'
 import ClinicService from '../../services/ClinicService'
-import DatePicker from 'react-datepicker'
+import DatePicker, { registerLocale } from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import ru from 'date-fns/locale/ru'
 import moment from 'moment'
 import buildPatientOption from '../../utils/buildPatientOption'
 import NumberFormat from 'react-number-format'
@@ -14,6 +15,8 @@ export default function AddUpdateVisit() {
   function useQuery() {
     return new URLSearchParams(useLocation().search)
   }
+
+  registerLocale('ru', { ...ru, options: { ...ru.options, weekStartsOn: 1 } })
 
   const history = useHistory()
   const params = useParams()
@@ -167,6 +170,7 @@ export default function AddUpdateVisit() {
                     value={date}
                     onSelect={(e) => setDate(e)}
                     onChange={(e) => setDate(e)}
+                    locale='ru'
                   />
                 </div>
                 <div className='form-group'>
