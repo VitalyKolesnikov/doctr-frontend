@@ -12,7 +12,7 @@ export default function Header() {
       <header>
         <Navbar bg='dark' variant='dark' expand='sm' className='py-0'>
           <Navbar.Brand href='/' className='navbar-brand'>
-            <FaTooth />
+            <FaTooth style={{ marginBottom: 5 }} />
             &nbsp;DoctR
           </Navbar.Brand>
           <Navbar.Toggle aria-controls='basic-navbar-nav' />

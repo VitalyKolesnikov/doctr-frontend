@@ -46,3 +46,8 @@
   text-align: center;
   color: white;
 }
+
+.card-info-icon {
+  margin: 6px;
+  margin-bottom: 10px;
+}

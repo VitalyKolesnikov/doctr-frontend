@@ -177,7 +177,7 @@ export default function AddUpdateVisit() {
                   <label>Cost:</label>
                   <NumberFormat
                     className='form-control col-5'
-                    placeholder='Cost'
+                    // placeholder='Cost'
                     name='cost'
                     value={cost}
                     onChange={(e) => setCost(e.target.value)}
@@ -188,15 +188,6 @@ export default function AddUpdateVisit() {
                     }}
                     thousandSeparator={true}
                   />
-                  {/* <select
-                    className='form-select form-control col-4'
-                    name='percent'
-                    value={percent}
-                    onChange={(e) => setPercent(e.target.value)}
-                  >
-                    <option value={25}>25%</option>
-                    <option value={30}>30%</option>
-                  </select> */}
                 </div>
 
                 {percentOptions.map((val, idx) => {
@@ -249,7 +240,7 @@ export default function AddUpdateVisit() {
                 <div className='form-group'>
                   <label>Info:</label>
                   <textarea
-                    placeholder='Info'
+                    // placeholder='Info'
                     name='info'
                     className='form-control'
                     value={info}

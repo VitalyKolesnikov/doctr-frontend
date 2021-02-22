@@ -3,11 +3,18 @@ import { useHistory, useParams } from 'react-router'
 import PatientService from '../../services/PatientService'
 import { Link } from 'react-router-dom'
 import VisitList from '../visits/VisitList'
+import getAge from '../../utils/getAge'
+import '../../App.css'
+
+// icons
 import { FaEdit } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
-import getAge from '../../utils/getAge'
 import { BsPersonFill } from 'react-icons/bs'
 import { CgFileAdd } from 'react-icons/cg'
+import { BiCalendar } from 'react-icons/bi'
+import { FiAtSign } from 'react-icons/fi'
+import { BiPhone } from 'react-icons/bi'
+import { ImInfo } from 'react-icons/im'
 
 export default function PatientCard() {
   const history = useHistory()
@@ -54,19 +61,34 @@ export default function PatientCard() {
           <hr></hr>
 
           <div className='row'>
-            <div className='col-8 col-lg-4'>
-              <div>
-                {patient.birthDate} {getAge(patient.birthDate)}
-              </div>
+            <div className='col-9 col-lg-4'>
+              {patient.birthDate && (
+                <div>
+                  <BiCalendar className='card-info-icon' />
+                  {patient.birthDate} ({getAge(patient.birthDate)} years)
+                </div>
+              )}
 
-              <div>
-                <a href={'mailto:' + patient.email}>{patient.email}</a>
-              </div>
+              {patient.email && (
+                <div>
+                  <FiAtSign className='card-info-icon' />
+                  <a href={'mailto:' + patient.email}>{patient.email}</a>
+                </div>
+              )}
 
-              <div>
-                <a href={'tel:' + patient.phone}>{patient.phone}</a>
-              </div>
-              <div>{patient.info}</div>
+              {patient.phone && (
+                <div>
+                  <BiPhone className='card-info-icon' />
+                  <a href={'tel:' + patient.phone}>{patient.phone}</a>
+                </div>
+              )}
+
+              {patient.info && (
+                <div>
+                  <ImInfo className='card-info-icon' />
+                  {patient.info}
+                </div>
+              )}
             </div>
             <div className='col-2'>
               <div className='row' style={{ paddingBottom: 15 }}>

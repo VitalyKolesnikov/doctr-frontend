@@ -2,11 +2,19 @@ import { useState, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router'
 import VisitService from '../../services/VisitService'
 import Cost from '../Cost'
+import { Link } from 'react-router-dom'
+import '../../App.css'
+
+// icons
 import { FaEdit } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
 import { CgFile } from 'react-icons/cg'
 import { FaChild } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
+import { BiClinic } from 'react-icons/bi'
+import { BiCalendar } from 'react-icons/bi'
+import { BiRuble } from 'react-icons/bi'
+import { FiPercent } from 'react-icons/fi'
+import { ImInfo } from 'react-icons/im'
 
 export default function VisitCard() {
   const history = useHistory()
@@ -41,7 +49,7 @@ export default function VisitCard() {
           <div className='card'>
             <div className='card-body'>
               <div className='row'>
-                <div className='col-4 col-lg-1'>
+                <div className='col-4 col-lg-2'>
                   <CgFile
                     style={{ paddingTop: 3, color: 'e8e24c' }}
                     size='5em'
@@ -82,15 +90,25 @@ export default function VisitCard() {
 
               <div className='row'>
                 <div className='col-8 col-lg-4'>
-                  <div>{visit.clinic.name}</div>
-                  <div>{visit.date}</div>
                   <div>
+                    <BiClinic className='card-info-icon' />
+                    {visit.clinic.name}
+                  </div>
+
+                  <div>
+                    <BiCalendar className='card-info-icon' />
+                    {visit.date}
+                  </div>
+
+                  <div>
+                    <BiRuble className='card-info-icon' />
                     <Cost value={visit.cost}></Cost> руб.
                   </div>
+
                   <div>
+                    <FiPercent className='card-info-icon' />
                     {visit.percent}% ({(visit.cost / 100) * visit.percent} руб.)
                   </div>
-                  <div>{visit.info}</div>
                 </div>
                 <div className='col-2'>
                   <div className='row' style={{ paddingBottom: 15 }}>
@@ -117,6 +135,12 @@ export default function VisitCard() {
                   </div>
                 </div>
               </div>
+              {visit.info && (
+                <div>
+                  <ImInfo className='card-info-icon' />
+                  {visit.info}
+                </div>
+              )}
             </div>
           </div>
         </div>

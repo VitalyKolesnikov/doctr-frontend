@@ -43,7 +43,7 @@ export default function AddUpdatePatient() {
       lastName: lastName,
       birthDate: birthDate,
       email: email,
-      phone: phone,
+      phone: phone.includes('_') ? '' : phone,
       info: info,
     }
     console.log('patient => ' + JSON.stringify(patient))
@@ -131,7 +131,7 @@ export default function AddUpdatePatient() {
                 <div className='form-group'>
                   <label>Phone:</label>
                   <NumberFormat
-                    className='form-control col-7'
+                    className='form-control col-8'
                     format='+#(###)###-####'
                     allowEmptyFormatting
                     mask='_'
@@ -146,7 +146,7 @@ export default function AddUpdatePatient() {
                     type='email'
                     // placeholder='Email'
                     name='email'
-                    className='form-control col-10'
+                    className='form-control col-9'
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
