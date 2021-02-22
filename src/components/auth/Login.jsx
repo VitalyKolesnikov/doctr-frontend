@@ -4,11 +4,11 @@ import AuthService from '../../services/AuthService.js'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 
-export default function LoginComponent() {
+export default function Login() {
   const history = useHistory()
 
-  const [username, setUsername] = useState('nastya')
-  const [password, setPassword] = useState('qwas')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [loginFailed, setLoginFailed] = useState(false)
 
   const loginClicked = (e) => {
