@@ -30,31 +30,36 @@ export default function VisitList({ patientId }) {
           <table className='table table-striped table-bordered table-sm'>
             <thead>
               <tr>
-                <th>Patient</th>
-                <th>Clinic</th>
                 <th>Date</th>
+                {!patientId && <th>Patient</th>}
+                <th>Clinic</th>
+                {patientId && <th>Info</th>}
               </tr>
             </thead>
             <tbody>
               {visits.map((visit) => (
                 <tr key={visit.id}>
                   <td>
-                    <Link to={'/visits/' + visit.id}>
+                    <Link to={'/visits/' + visit.id}>{visit.date}</Link>
+                  </td>
+                  {!patientId && (
+                    <td>
                       {visit.patient.lastName}{' '}
                       {makeInitials(
                         visit.patient.firstName,
                         visit.patient.middleName
                       )}
-                    </Link>
-                  </td>
+                    </td>
+                  )}
                   <td>{visit.clinic.name}</td>
-                  <td>{visit.date}</td>
+                  {patientId && <td>{visit.info}</td>}
                 </tr>
               ))}
             </tbody>
           </table>
         )}
       </div>
+      <br></br>
     </div>
   )
 }
