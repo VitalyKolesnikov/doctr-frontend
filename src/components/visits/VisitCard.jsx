@@ -107,7 +107,8 @@ export default function VisitCard() {
 
                   <div>
                     <FiPercent className='card-info-icon' />
-                    {visit.percent}% ({(visit.cost / 100) * visit.percent} руб.)
+                    {visit.percent}% (
+                    {Math.round((visit.cost / 100) * visit.percent)} руб.)
                   </div>
                 </div>
                 <div className='col-2'>

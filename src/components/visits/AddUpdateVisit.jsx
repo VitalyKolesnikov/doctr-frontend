@@ -50,7 +50,6 @@ export default function AddUpdateVisit() {
             patient.lastName,
             patient.firstName,
             patient.middleName
-            // patient.birthDate
           )
         )
       })
@@ -64,7 +63,6 @@ export default function AddUpdateVisit() {
             visit.patient.lastName,
             visit.patient.firstName,
             visit.patient.middleName
-            // visit.patient.birthDate
           )
         )
         setDate(moment(visit.date, 'DD.MM.yyyy'))
@@ -177,7 +175,6 @@ export default function AddUpdateVisit() {
                   <label>Cost:</label>
                   <NumberFormat
                     className='form-control col-5'
-                    // placeholder='Cost'
                     name='cost'
                     value={cost}
                     onChange={(e) => setCost(e.target.value)}
@@ -240,7 +237,6 @@ export default function AddUpdateVisit() {
                 <div className='form-group'>
                   <label>Info:</label>
                   <textarea
-                    // placeholder='Info'
                     name='info'
                     className='form-control'
                     value={info}
