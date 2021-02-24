@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router'
 import PatientService from '../../services/PatientService'
 import { Link } from 'react-router-dom'
-import VisitList from '../visits/VisitList'
+import PatientCardVisitList from '../visits/PatientCardVisitList'
 import getAge from '../../utils/getAge'
 import '../../App.css'
 
@@ -132,7 +132,7 @@ export default function PatientCard() {
             </button>
           </Link>
         </div>
-        <VisitList patientId={patient.id} />
+        <PatientCardVisitList patientId={patient.id} />
       </div>
     </div>
   )

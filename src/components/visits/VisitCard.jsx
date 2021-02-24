@@ -102,13 +102,12 @@ export default function VisitCard() {
 
                   <div>
                     <BiRuble className='card-info-icon' />
-                    <Cost value={visit.cost}></Cost> руб.
+                    <Cost value={visit.cost} /> руб.
                   </div>
 
                   <div>
                     <FiPercent className='card-info-icon' />
-                    {visit.percent}% (
-                    {Math.round((visit.cost / 100) * visit.percent)} руб.)
+                    {visit.percent}% (<Cost value={visit.share} /> руб.)
                   </div>
                 </div>
                 <div className='col-2'>

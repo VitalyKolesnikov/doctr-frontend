@@ -24,7 +24,7 @@ export default function PatientList() {
         lastName: i.lastName,
         firstName: i.firstName,
         middleName: i.middleName,
-        birthDate: i.birthDate,
+        // birthDate: i.birthDate,
       }))
 
       setOptions(options)
@@ -35,6 +35,7 @@ export default function PatientList() {
   useEffect(() => {
     PatientService.getAll().then((resp) => {
       setPatients(resp.data)
+      console.log(resp.data)
     })
   }, [])
 
@@ -104,6 +105,7 @@ export default function PatientList() {
             ))}
           </tbody>
         </table>
+        <br></br>
       </div>
     </div>
   )
