@@ -1,17 +1,18 @@
 import { useState, useEffect } from 'react'
-import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
 import VisitService from '../../services/VisitService'
 import Cost from '../Cost'
+import { trackPromise } from 'react-promise-tracker'
 
 export default function VisitList({ patientId }) {
-  const history = useHistory()
   const [visits, setVisits] = useState([])
 
   useEffect(() => {
-    VisitService.getForPatient(patientId).then((resp) => {
-      setVisits(resp.data)
-    })
+    trackPromise(
+      VisitService.getForPatient(patientId).then((resp) => {
+        setVisits(resp.data)
+      })
+    )
   }, [patientId])
 
   return (
@@ -19,7 +20,6 @@ export default function VisitList({ patientId }) {
       <br></br>
       <div className='row'>
         {visits.length === 0 && <h5>No visits yet</h5>}
-        {/* {visits.length !== 0 && ( */}
         {visits.map((visit) => (
           <table className='table table-striped table-bordered table-sm'>
             <tbody>

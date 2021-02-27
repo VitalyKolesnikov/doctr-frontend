@@ -4,6 +4,7 @@ import PatientService from '../../services/PatientService'
 import Cleave from 'cleave.js/react'
 import NumberFormat from 'react-number-format'
 import Form from 'react-bootstrap/Form'
+import { trackPromise } from 'react-promise-tracker'
 
 export default function AddUpdatePatient() {
   const history = useHistory()
@@ -22,16 +23,18 @@ export default function AddUpdatePatient() {
     if (id === '_add') {
       return
     } else {
-      PatientService.getById(id).then((res) => {
-        let patient = res.data
-        setLastName(patient.lastName)
-        setFirstName(patient.firstName)
-        setMiddleName(patient.middleName)
-        setBirthDate(patient.birthDate)
-        setEmail(patient.email)
-        setPhone(patient.phone)
-        setInfo(patient.info)
-      })
+      trackPromise(
+        PatientService.getById(id).then((res) => {
+          let patient = res.data
+          setLastName(patient.lastName)
+          setFirstName(patient.firstName)
+          setMiddleName(patient.middleName)
+          setBirthDate(patient.birthDate)
+          setEmail(patient.email)
+          setPhone(patient.phone)
+          setInfo(patient.info)
+        })
+      )
     }
   }, [])
 
@@ -49,13 +52,17 @@ export default function AddUpdatePatient() {
     console.log('patient => ' + JSON.stringify(patient))
 
     if (id === '_add') {
-      PatientService.add(patient).then((resp) => {
-        history.push('/patients/' + resp.data.id)
-      })
+      trackPromise(
+        PatientService.add(patient).then((resp) => {
+          history.push('/patients/' + resp.data.id)
+        })
+      )
     } else {
-      PatientService.update(patient, id).then(() => {
-        history.push('/patients/' + id)
-      })
+      trackPromise(
+        PatientService.update(patient, id).then(() => {
+          history.push('/patients/' + id)
+        })
+      )
     }
   }
 
@@ -84,7 +91,6 @@ export default function AddUpdatePatient() {
                 <div className='form-group'>
                   <label>* Last Name:</label>
                   <input
-                    // placeholder='Last Name'
                     name='lastName'
                     className='form-control'
                     value={lastName}
@@ -95,7 +101,6 @@ export default function AddUpdatePatient() {
                 <div className='form-group'>
                   <label>* First Name:</label>
                   <input
-                    // placeholder='First Name'
                     name='firstName'
                     className='form-control'
                     value={firstName}
@@ -106,7 +111,6 @@ export default function AddUpdatePatient() {
                 <div className='form-group'>
                   <label>Middle Name:</label>
                   <input
-                    // placeholder='Middle Name'
                     name='middleName'
                     className='form-control'
                     value={middleName}
@@ -144,7 +148,6 @@ export default function AddUpdatePatient() {
                   <label>Email:</label>
                   <input
                     type='email'
-                    // placeholder='Email'
                     name='email'
                     className='form-control col-9'
                     value={email}
@@ -154,7 +157,6 @@ export default function AddUpdatePatient() {
                 <div className='form-group'>
                   <label>Info:</label>
                   <textarea
-                    // placeholder='Info'
                     name='info'
                     className='form-control'
                     value={info}

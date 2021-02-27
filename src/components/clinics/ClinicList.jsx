@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react'
+import { trackPromise } from 'react-promise-tracker'
 import ClinicService from '../../services/ClinicService'
 
 export default function ClinicListComponent() {
   const [clinics, setClinics] = useState([])
 
   useEffect(() => {
-    ClinicService.getAll().then((resp) => {
-      setClinics(resp.data)
-    })
+    trackPromise(
+      ClinicService.getAll().then((resp) => {
+        setClinics(resp.data)
+      })
+    )
   }, [])
 
   return (

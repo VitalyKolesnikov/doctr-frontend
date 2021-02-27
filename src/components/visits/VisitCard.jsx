@@ -4,11 +4,12 @@ import VisitService from '../../services/VisitService'
 import Cost from '../Cost'
 import { Link } from 'react-router-dom'
 import '../../App.css'
+import { trackPromise } from 'react-promise-tracker'
 
 // icons
 import { FaEdit } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
-import { CgFile } from 'react-icons/cg'
+import { CgFileDocument } from 'react-icons/cg'
 import { FaChild } from 'react-icons/fa'
 import { BiClinic } from 'react-icons/bi'
 import { BiCalendar } from 'react-icons/bi'
@@ -25,11 +26,13 @@ export default function VisitCard() {
 
   useEffect(() => {
     console.log('id: ' + id)
-    VisitService.getById(id).then((resp) => {
-      console.log('data: ' + resp.data.date)
-      setVisit(resp.data)
-      console.log(visit)
-    })
+    trackPromise(
+      VisitService.getById(id).then((resp) => {
+        console.log('data: ' + resp.data.date)
+        setVisit(resp.data)
+        console.log(visit)
+      })
+    )
   }, [])
 
   const editVisit = (id) => {
@@ -50,8 +53,8 @@ export default function VisitCard() {
             <div className='card-body'>
               <div className='row'>
                 <div className='col-4 col-lg-2'>
-                  <CgFile
-                    style={{ paddingTop: 3, color: 'e8e24c' }}
+                  <CgFileDocument
+                    style={{ paddingTop: 3, color: '#f26f04' }}
                     size='5em'
                   />
                   <div style={{ paddingLeft: 15 }}>

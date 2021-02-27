@@ -3,19 +3,22 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import PatientList from './components/patients/PatientList'
 import ClinicList from './components/clinics/ClinicList'
 import VisitList from './components/visits/VisitList'
+import ReminderList from './components/reminders/ReminderList'
 import Header from './components/Header.js'
 import Footer from './components/Footer.js'
 import AddUpdatePatient from './components/patients/AddUpdatePatient'
 import AddUpdateVisit from './components/visits/AddUpdateVisit'
 import Login from './components/auth/Login.jsx'
-import AuthenticatedRoute from './components/auth/AuthenticatedRoute.jsx'
+import { AuthenticatedRoute } from './components/auth/AuthenticatedRoute.jsx'
 import PatientCard from './components/patients/PatientCard'
 import VisitCard from './components/visits/VisitCard'
 import Home from './components/Home'
+import AddUpdateReminder from './components/reminders/AddUpdateReminder'
+import { ReminderProvider } from './components/ReminderContext'
 
 function App() {
   return (
-    <div>
+    <ReminderProvider>
       <Router>
         <Header />
         <div className='container'>
@@ -36,6 +39,7 @@ function App() {
             <AuthenticatedRoute path='/patients' component={PatientList} />
             <AuthenticatedRoute path='/clinics' component={ClinicList} />
             <AuthenticatedRoute path='/visits' component={VisitList} />
+            <AuthenticatedRoute path='/reminders' component={ReminderList} />
             <AuthenticatedRoute
               path='/add-update-patient/:id'
               component={AddUpdatePatient}
@@ -45,14 +49,14 @@ function App() {
               component={AddUpdateVisit}
             />
             <AuthenticatedRoute
-              path='/add-update-visit/:id'
-              component={AddUpdateVisit}
+              path='/add-update-reminder/:id'
+              component={AddUpdateReminder}
             />
           </Switch>
         </div>
         <Footer />
       </Router>
-    </div>
+    </ReminderProvider>
   )
 }
 

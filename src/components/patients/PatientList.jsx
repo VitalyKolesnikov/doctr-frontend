@@ -3,11 +3,14 @@ import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
 import PatientService from '../../services/PatientService'
 import makeInitials from '../../utils/makeInitials'
-import { BsPersonPlusFill } from 'react-icons/bs'
 import Form from 'react-bootstrap/Form'
 import { AsyncTypeahead } from 'react-bootstrap-typeahead'
 import 'react-bootstrap-typeahead/css/Typeahead.css'
 import buildPatientOption from '../../utils/buildPatientOption'
+import { trackPromise } from 'react-promise-tracker'
+
+// icons
+import { BsPersonPlusFill } from 'react-icons/bs'
 
 export default function PatientList() {
   const history = useHistory()
@@ -17,26 +20,24 @@ export default function PatientList() {
 
   const handleSearch = (query) => {
     setIsLoading(true)
-
     PatientService.getSuggested(query).then((resp) => {
       const options = resp.data.map((i) => ({
         id: i.id,
         lastName: i.lastName,
         firstName: i.firstName,
         middleName: i.middleName,
-        // birthDate: i.birthDate,
       }))
-
       setOptions(options)
       setIsLoading(false)
     })
   }
 
   useEffect(() => {
-    PatientService.getAll().then((resp) => {
-      setPatients(resp.data)
-      console.log(resp.data)
-    })
+    trackPromise(
+      PatientService.getAll().then((resp) => {
+        setPatients(resp.data)
+      })
+    )
   }, [])
 
   return (
@@ -67,7 +68,6 @@ export default function PatientList() {
                     opt.lastName,
                     opt.firstName,
                     opt.middleName
-                    // opt.birthDate
                   )
                 }
                 onSearch={handleSearch}
@@ -81,7 +81,6 @@ export default function PatientList() {
         </div>
       </div>
 
-      <br></br>
       <div className='row'>
         <table className='table table-striped table-bordered table-sm'>
           <thead>
@@ -105,6 +104,7 @@ export default function PatientList() {
             ))}
           </tbody>
         </table>
+        <br></br>
         <br></br>
       </div>
     </div>

@@ -1,71 +1,74 @@
+import { useState, useEffect, useContext } from 'react'
 import AuthService from '../services/AuthService'
+import ReminderService from '../services/ReminderService'
+import { Navbar, Nav, NavItem } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import '../App.css'
+import { ReminderContext } from './ReminderContext'
+
+// icons
 import { FaSignOutAlt } from 'react-icons/fa'
 import { FaTooth } from 'react-icons/fa'
-import { Navbar, Nav } from 'react-bootstrap'
+import { BsBell } from 'react-icons/bs'
+import { BsPersonFill } from 'react-icons/bs'
+import { CgFileDocument } from 'react-icons/cg'
 
 export default function Header() {
   const isUserLoggedIn = AuthService.isUserLoggedIn()
-  const user = JSON.parse(localStorage.getItem('user'))
+  // const user = JSON.parse(localStorage.getItem('user'))
+
+  const [count, setCount] = useContext(ReminderContext)
 
   return (
-    <div>
-      <header>
-        <Navbar bg='dark' variant='dark' expand='sm' className='py-0'>
-          <Navbar.Brand href='/' className='navbar-brand'>
-            <FaTooth style={{ marginBottom: 5 }} />
-            &nbsp;DoctR
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls='basic-navbar-nav' />
+    <header>
+      <Navbar bg='dark' variant='dark' expand='sm' lassName='py-0'>
+        <Navbar.Brand as={Link} to='/' className='navbar-brand'>
+          <FaTooth style={{ marginBottom: 5 }} />
+          &nbsp;DoctR
+        </Navbar.Brand>
 
-          <Navbar.Collapse className='justify-content-end'>
-            {isUserLoggedIn && (
-              <Nav>
-                <Nav.Link className='nav-link' href='/patients'>
-                  Patients
-                </Nav.Link>
-              </Nav>
-            )}
+        {isUserLoggedIn && (
+          <Nav>
+            <div className='row'>
+              {count > 0 && (
+                <NavItem>
+                  <Nav.Link
+                    className='header-icon-bell'
+                    as={Link}
+                    to='/reminders'
+                    style={{
+                      color: 'red',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    <BsBell />
+                    {count}
+                  </Nav.Link>
+                </NavItem>
+              )}
 
-            {/* {isUserLoggedIn && (
-              <Nav>
-                <Nav.Link className='nav-link' href='/clinics'>
-                  Clinics
+              <NavItem>
+                <Nav.Link as={Link} to='/patients'>
+                  <BsPersonFill className='header-icon' />
                 </Nav.Link>
-              </Nav>
-            )} */}
+              </NavItem>
 
-            {isUserLoggedIn && (
-              <Nav>
-                <Nav.Link className='nav-link' href='/visits'>
-                  Visits
+              <NavItem>
+                <Nav.Link as={Link} to='/visits'>
+                  <CgFileDocument className='header-icon' />
                 </Nav.Link>
-              </Nav>
-            )}
+              </NavItem>
 
-            {isUserLoggedIn && (
-              <Nav>
-                <Nav.Link className='nav-link' disabled>
-                  {user.firstName} {user.lastName}
+              <NavItem>
+                <Nav.Link href='/logout' onClick={AuthService.logout}>
+                  <FaSignOutAlt className='header-icon' />
                 </Nav.Link>
-              </Nav>
-            )}
-
-            {isUserLoggedIn && (
-              <Nav>
-                <Nav.Link
-                  className='nav-link'
-                  href='/logout'
-                  onClick={AuthService.logout}
-                >
-                  <FaSignOutAlt />
-                  &nbsp;Logout
-                </Nav.Link>
-              </Nav>
-            )}
-          </Navbar.Collapse>
-        </Navbar>
-        <br></br>
-      </header>
-    </div>
+              </NavItem>
+            </div>
+          </Nav>
+        )}
+      </Navbar>
+      <br></br>
+    </header>
   )
 }

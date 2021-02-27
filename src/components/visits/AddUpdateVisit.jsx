@@ -10,6 +10,7 @@ import ru from 'date-fns/locale/ru'
 import moment from 'moment'
 import buildPatientOption from '../../utils/buildPatientOption'
 import NumberFormat from 'react-number-format'
+import { trackPromise } from 'react-promise-tracker'
 
 export default function AddUpdateVisit() {
   function useQuery() {
@@ -38,40 +39,46 @@ export default function AddUpdateVisit() {
   const percentOptions = [25, 30]
 
   useEffect(() => {
-    ClinicService.getAll().then((resp) => {
-      setClinics(resp.data)
-    })
+    trackPromise(
+      ClinicService.getAll().then((resp) => {
+        setClinics(resp.data)
+      })
+    )
 
     if (visitId === '_add') {
-      PatientService.getById(patientId).then((res) => {
-        let patient = res.data
-        setPatientInfo(
-          buildPatientOption(
-            patient.lastName,
-            patient.firstName,
-            patient.middleName
+      trackPromise(
+        PatientService.getById(patientId).then((res) => {
+          let patient = res.data
+          setPatientInfo(
+            buildPatientOption(
+              patient.lastName,
+              patient.firstName,
+              patient.middleName
+            )
           )
-        )
-      })
+        })
+      )
     } else {
-      VisitService.getById(visitId).then((res) => {
-        let visit = res.data
-        setClinicId(visit.clinic.id)
-        setPatientId(visit.patient.id)
-        setPatientInfo(
-          buildPatientOption(
-            visit.patient.lastName,
-            visit.patient.firstName,
-            visit.patient.middleName
+      trackPromise(
+        VisitService.getById(visitId).then((res) => {
+          let visit = res.data
+          setClinicId(visit.clinic.id)
+          setPatientId(visit.patient.id)
+          setPatientInfo(
+            buildPatientOption(
+              visit.patient.lastName,
+              visit.patient.firstName,
+              visit.patient.middleName
+            )
           )
-        )
-        setDate(moment(visit.date, 'DD.MM.yyyy'))
-        setCost(visit.cost)
-        setPercent(visit.percent)
-        setChild(visit.child)
-        setFirst(visit.first)
-        setInfo(visit.info)
-      })
+          setDate(moment(visit.date, 'DD.MM.yyyy'))
+          setCost(visit.cost)
+          setPercent(visit.percent)
+          setChild(visit.child)
+          setFirst(visit.first)
+          setInfo(visit.info)
+        })
+      )
     }
   }, [])
 
@@ -90,14 +97,18 @@ export default function AddUpdateVisit() {
     console.log('visit => ' + JSON.stringify(visit))
 
     if (visitId === '_add') {
-      VisitService.add(visit).then((resp) => {
-        history.push('/visits/' + resp.data.id)
-      })
+      trackPromise(
+        VisitService.add(visit).then((resp) => {
+          history.push('/visits/' + resp.data.id)
+        })
+      )
     } else {
       visit.id = visitId
-      VisitService.update(visit, visitId).then(() => {
-        history.push('/visits/' + visitId)
-      })
+      trackPromise(
+        VisitService.update(visit, visitId).then(() => {
+          history.push('/visits/' + visitId)
+        })
+      )
     }
   }
 

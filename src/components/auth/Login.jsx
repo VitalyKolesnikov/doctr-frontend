@@ -1,25 +1,25 @@
 import { useState } from 'react'
-import { useHistory } from 'react-router-dom'
 import AuthService from '../../services/AuthService.js'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
+import { trackPromise } from 'react-promise-tracker'
 
 export default function Login() {
-  const history = useHistory()
-
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [loginFailed, setLoginFailed] = useState(false)
 
   const loginClicked = (e) => {
     e.preventDefault()
-    AuthService.login(username, password)
-      .then(() => {
-        history.push('/')
-      })
-      .catch(() => {
-        setLoginFailed(true)
-      })
+    trackPromise(
+      AuthService.login(username, password)
+        .then(() => {
+          window.location.href = '/'
+        })
+        .catch(() => {
+          setLoginFailed(true)
+        })
+    )
   }
 
   return (

@@ -5,19 +5,22 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import Cost from '../Cost'
 import VisitService from '../../services/VisitService'
 import makeInitials from '../../utils/makeInitials'
+import { trackPromise } from 'react-promise-tracker'
 
 export default function VisitList() {
   const [visits, setVisits] = useState([])
 
   useEffect(() => {
-    VisitService.getAll().then((resp) => {
-      setVisits(resp.data)
-    })
+    trackPromise(
+      VisitService.getAll().then((resp) => {
+        setVisits(resp.data)
+      })
+    )
   }, [])
 
   return (
     <div>
-      <h2>Visits</h2>
+      <h2 style={{ paddingTop: 6 }}>Visits</h2>
       {visits.map((visitsDto, idx) => (
         <Accordion key={visitsDto.date} defaultActiveKey={1}>
           <Card style={{ marginLeft: -20, marginRight: -15 }}>

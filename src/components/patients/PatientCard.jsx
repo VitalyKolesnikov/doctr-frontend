@@ -1,22 +1,34 @@
 import { useState, useEffect } from 'react'
-import { useHistory, useParams } from 'react-router'
+import { useHistory, useParams, useLocation } from 'react-router'
 import PatientService from '../../services/PatientService'
 import { Link } from 'react-router-dom'
 import PatientCardVisitList from '../visits/PatientCardVisitList'
+import PatientCardReminderList from '../reminders/PatientCardReminderList'
 import getAge from '../../utils/getAge'
 import '../../App.css'
+import { Tabs, Tab } from 'react-bootstrap'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import { trackPromise } from 'react-promise-tracker'
 
 // icons
 import { FaEdit } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
 import { BsPersonFill } from 'react-icons/bs'
-import { CgFileAdd } from 'react-icons/cg'
 import { BiCalendar } from 'react-icons/bi'
 import { FiAtSign } from 'react-icons/fi'
 import { BiPhone } from 'react-icons/bi'
 import { ImInfo } from 'react-icons/im'
+import { FiFilePlus } from 'react-icons/fi'
+import { BiBellPlus } from 'react-icons/bi'
 
 export default function PatientCard() {
+  function useQuery() {
+    return new URLSearchParams(useLocation().search)
+  }
+
+  const query = useQuery()
+  const [show, setShow] = useState(query.get('show'))
+
   const history = useHistory()
   const params = useParams()
 
@@ -24,9 +36,11 @@ export default function PatientCard() {
   const [id] = useState(params.id)
 
   useEffect(() => {
-    PatientService.getById(id).then((resp) => {
-      setPatient(resp.data)
-    })
+    trackPromise(
+      PatientService.getById(id).then((resp) => {
+        setPatient(resp.data)
+      })
+    )
   }, [])
 
   const editPatient = (id) => {
@@ -34,9 +48,11 @@ export default function PatientCard() {
   }
 
   const deletePatient = (id) => {
-    PatientService.delete(id).then(() => {
-      history.push({ pathname: '/patients' })
-    })
+    trackPromise(
+      PatientService.delete(id).then(() => {
+        history.push({ pathname: '/patients' })
+      })
+    )
   }
 
   return (
@@ -118,22 +134,42 @@ export default function PatientCard() {
         </div>
       </div>
 
+      <div className='row'>
+        <Link
+          className='nav-link'
+          to={'/add-update-visit/_add?patientId=' + patient.id}
+        >
+          <button className='btn btn-primary'>
+            Add visit&nbsp;
+            <FiFilePlus className='button-icon' />
+          </button>
+        </Link>
+
+        <Link
+          className='nav-link'
+          to={'/add-update-reminder/_add?patientId=' + patient.id}
+        >
+          <button className='btn btn-primary'>
+            Add reminder&nbsp;
+            <BiBellPlus className='button-icon' />
+          </button>
+        </Link>
+      </div>
+
       <br></br>
 
-      <div className='container'>
-        <div className='row'>
-          <h3 style={{ paddingTop: 13 }}>Visits</h3>
-          <Link
-            className='nav-link'
-            to={'/add-update-visit/_add?patientId=' + patient.id}
-          >
-            <button className='btn btn-primary btn-sm'>
-              <CgFileAdd size='2em' />
-            </button>
-          </Link>
-        </div>
-        <PatientCardVisitList patientId={patient.id} />
-      </div>
+      <Tabs defaultActiveKey={show === 'rem' ? 'reminders' : 'visits'}>
+        <Tab eventKey='visits' title='Visits'>
+          <div className='container'>
+            <PatientCardVisitList patientId={id} />
+          </div>
+        </Tab>
+        <Tab eventKey='reminders' title='Reminders'>
+          <div className='container'>
+            <PatientCardReminderList patientId={id} />
+          </div>
+        </Tab>
+      </Tabs>
     </div>
   )
 }

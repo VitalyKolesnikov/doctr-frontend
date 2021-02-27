@@ -52,3 +52,21 @@
   margin-bottom: 10px;
   color: seagreen;
 }
+
+.header-icon {
+  font-size: 1.3em;
+  margin-right: 35px;
+}
+
+.header-icon-bell {
+  font-size: 1em;
+  margin-right: 35px;
+}
+
+.button-icon {
+  font-size: 1.5em;
+}
+
+.text-grey {
+  color: rgb(199, 199, 199);
+}

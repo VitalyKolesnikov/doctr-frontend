@@ -1,6 +1,7 @@
 import { BsPersonFill } from 'react-icons/bs'
-import { CgFile } from 'react-icons/cg'
+import { CgFileDocument } from 'react-icons/cg'
 import { Nav } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 
 export default function Home() {
   return (
@@ -12,7 +13,7 @@ export default function Home() {
             <div className='row'>
               <div className='col-6 col-lg-3'>
                 <Nav>
-                  <Nav.Link className='nav-link' href='/patients'>
+                  <Nav.Link className='nav-link' as={Link} to='/patients'>
                     <div className='row'>
                       <BsPersonFill size='7em' style={{ color: '28a745' }} />
                     </div>
@@ -25,9 +26,9 @@ export default function Home() {
 
               <div className='col-6 col-lg-3'>
                 <Nav>
-                  <Nav.Link className='nav-link' href='/visits'>
+                  <Nav.Link className='nav-link' as={Link} to='/visits'>
                     <div className='row'>
-                      <CgFile size='7em' style={{ color: 'e8e24c' }} />
+                      <CgFileDocument size='7em' style={{ color: '#f26f04' }} />
                     </div>
                     <div className='row'>
                       <h4 style={{ paddingLeft: 25 }}>Visits</h4>
