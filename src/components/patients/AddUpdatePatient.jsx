@@ -41,12 +41,13 @@ export default function AddUpdatePatient() {
   const savePatient = (e) => {
     e.preventDefault()
     let patient = {
+      id: id === '_add' ? null : id,
       firstName: firstName,
       middleName: middleName,
       lastName: lastName,
       birthDate: birthDate,
       email: email,
-      phone: phone.includes('_') ? '' : phone,
+      phone: phone && phone.includes('_') ? null : phone,
       info: info,
     }
     console.log('patient => ' + JSON.stringify(patient))
@@ -88,6 +89,8 @@ export default function AddUpdatePatient() {
             {getTitle()}
             <div className='card-body'>
               <Form onSubmit={savePatient}>
+                <input type='hidden' name='id' value={id} />
+
                 <div className='form-group'>
                   <label>* Last Name:</label>
                   <input
@@ -129,6 +132,7 @@ export default function AddUpdatePatient() {
                     }}
                     name='birthDate'
                     value={birthDate}
+                    inputmode='numeric'
                     onChange={(e) => setBirthDate(e.target.value)}
                   />
                 </div>
