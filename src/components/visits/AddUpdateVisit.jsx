@@ -36,7 +36,7 @@ export default function AddUpdateVisit() {
 
   const [clinics, setClinics] = useState([])
 
-  const percentOptions = [25, 30]
+  const percentOptions = [25, 30, 37]
 
   useEffect(() => {
     trackPromise(
