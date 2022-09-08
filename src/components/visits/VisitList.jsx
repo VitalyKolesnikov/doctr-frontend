@@ -20,7 +20,7 @@ export default function VisitList() {
 
   return (
     <div>
-      <h2 style={{ paddingTop: 6 }}>Visits (last 2 months)</h2>
+      <h2 style={{ paddingTop: 6 }}>Visits (last 6 months)</h2>
       {visits.map((visitsDto, idx) => (
         <Accordion key={visitsDto.date} defaultActiveKey={1}>
           <Card style={{ marginLeft: -20, marginRight: -15 }}>
