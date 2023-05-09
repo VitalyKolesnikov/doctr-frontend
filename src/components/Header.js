@@ -21,7 +21,7 @@ export default function Header() {
 
   return (
     <header>
-      <Navbar bg='dark' variant='dark' expand='sm' lassName='py-0'>
+      <Navbar bg='dark' variant='dark' expand='sm' className='py-0'>
         <Navbar.Brand as={Link} to='/' className='navbar-brand'>
           <FaTooth style={{ marginBottom: 5 }} />
           &nbsp;DoctR

@@ -1,8 +1,7 @@
 import axios from 'axios'
 import authHeader from './auth-header'
 
-const { REACT_APP_API_HOST } = process.env
-const CLINICS_REST_ENDPOINT = REACT_APP_API_HOST + '/api/v1/clinics/'
+const CLINICS_REST_ENDPOINT = window._env_.REACT_APP_API_HOST + '/api/v1/clinics/'
 
 class ClinicService {
   getAll() {

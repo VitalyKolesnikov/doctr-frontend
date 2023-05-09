@@ -42,6 +42,7 @@
     "yup": "^0.32.8"
   },
   "scripts": {
+    "dev": "chmod +x ./env.sh && sh ./env.sh && cp env-config.js ./public/ && react-scripts start",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
