@@ -1,4 +1,4 @@
-import Loader from 'react-loader-spinner'
+import {Grid} from 'react-loader-spinner'
 import { usePromiseTracker } from 'react-promise-tracker'
 
 export const LoadingSpinner = () => {
@@ -14,7 +14,7 @@ export const LoadingSpinner = () => {
           transform: 'translate(-50%, -50%)',
         }}
       >
-        <Loader type='Grid' color='#00BFFF' height={50} width={50} />
+        <Grid color='#00BFFF' height={50} width={50} />
       </div>
     )
   )

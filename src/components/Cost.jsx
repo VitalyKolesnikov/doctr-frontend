@@ -1,8 +1,8 @@
-import NumberFormat from 'react-number-format'
+import { NumericFormat } from 'react-number-format'
 
 const Cost = ({ value }) => {
   return (
-    <NumberFormat value={value} displayType={'text'} thousandSeparator={true} />
+    <NumericFormat value={value} displayType={'text'} thousandSeparator={true} />
   )
 }
 

@@ -9,7 +9,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import ru from 'date-fns/locale/ru'
 import moment from 'moment'
 import buildPatientOption from '../../utils/buildPatientOption'
-import NumberFormat from 'react-number-format'
+import { NumericFormat } from 'react-number-format'
 import { trackPromise } from 'react-promise-tracker'
 
 export default function AddUpdateVisit() {
@@ -184,7 +184,7 @@ export default function AddUpdateVisit() {
                 </div>
                 <div className='form-group'>
                   <label>Cost:</label>
-                  <NumberFormat
+                  <NumericFormat
                     className='form-control col-5'
                     name='cost'
                     value={cost}
@@ -195,7 +195,7 @@ export default function AddUpdateVisit() {
                       }
                     }}
                     thousandSeparator={true}
-                    inputmode='numeric'
+                    inputMode='numeric'
                   />
                 </div>
 

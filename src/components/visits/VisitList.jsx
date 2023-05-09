@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { Accordion, Card, Button } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -22,6 +22,7 @@ export default function VisitList() {
     <div>
       <h2 style={{ paddingTop: 6 }}>Visits (last 6 months)</h2>
       {visits.map((visitsDto, idx) => (
+        <Fragment key = {"acc_" + idx}>
         <Accordion key={visitsDto.date} defaultActiveKey={1}>
           <Card style={{ marginLeft: -20, marginRight: -15 }}>
             <Accordion.Toggle
@@ -34,10 +35,8 @@ export default function VisitList() {
             <Accordion.Collapse eventKey={idx + 1}>
               <Card.Body className='col-xs-12'>
                 {visitsDto.visits.map((visit) => (
-                  <table
-                    className='table table-striped table-bordered table-sm'
-                    key={visit.id}
-                  >
+                  <Fragment key = {visit.id}>
+                  <table className='table table-striped table-bordered table-sm'>
                     <tbody>
                       <tr>
                         <td width='50%'>
@@ -61,6 +60,7 @@ export default function VisitList() {
                       )}
                     </tbody>
                   </table>
+                  </Fragment>
                 ))}
                 <div style={{ color: 'red' }}>
                   Total: <Cost value={visitsDto.totalSum} /> /{' '}
@@ -70,6 +70,7 @@ export default function VisitList() {
             </Accordion.Collapse>
           </Card>
         </Accordion>
+        </Fragment>
       ))}
       <br></br>
     </div>

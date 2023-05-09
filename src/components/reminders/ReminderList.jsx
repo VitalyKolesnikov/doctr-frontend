@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import makeInitials from '../../utils/makeInitials'
 import ReminderService from '../../services/ReminderService'
@@ -47,7 +47,7 @@ export default function ReminderList() {
           <h5>&nbsp;&nbsp;&nbsp; No active reminders</h5>
         )}
         {reminders.map((reminder) => (
-          <>
+          <Fragment key = {reminder.id}>
             <div className='col-8 col-lg-4'>
               <div>
                 <BsPersonFill className='card-info-icon' />
@@ -83,7 +83,7 @@ export default function ReminderList() {
                 }}
               />
             </div>
-          </>
+          </Fragment>
         ))}
       </div>
     </div>

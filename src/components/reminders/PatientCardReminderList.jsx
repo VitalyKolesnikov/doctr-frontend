@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext, Fragment } from 'react'
 import { useHistory } from 'react-router'
 import ReminderService from '../../services/ReminderService'
 import { ReminderContext } from '../ReminderContext'
@@ -42,7 +42,7 @@ export default function PatientCardReminderList({ patientId }) {
       <div className='row'>
         {reminders.length === 0 && <h5>No reminders yet</h5>}
         {reminders.map((reminder) => (
-          <>
+          <Fragment key = {reminder.id}>
             <div
               className={
                 'col-8 col-lg-4' +
@@ -85,7 +85,7 @@ export default function PatientCardReminderList({ patientId }) {
                 />
               </div>
             )}
-          </>
+          </Fragment>
         ))}
       </div>
       <br></br>

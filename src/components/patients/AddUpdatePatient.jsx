@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import PatientService from '../../services/PatientService'
 import Cleave from 'cleave.js/react'
-import NumberFormat from 'react-number-format'
+import { NumericFormat } from 'react-number-format'
 import Form from 'react-bootstrap/Form'
 import { trackPromise } from 'react-promise-tracker'
 
@@ -132,13 +132,13 @@ export default function AddUpdatePatient() {
                     }}
                     name='birthDate'
                     value={birthDate}
-                    inputmode='numeric'
+                    inputMode='numeric'
                     onChange={(e) => setBirthDate(e.target.value)}
                   />
                 </div>
                 <div className='form-group'>
                   <label>Phone:</label>
-                  <NumberFormat
+                  <NumericFormat
                     className='form-control col-8'
                     format='+#(###)###-####'
                     allowEmptyFormatting
