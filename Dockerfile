@@ -1,10 +1,32 @@
+# => Build container
 FROM node:16.10.0-alpine3.14 as builder
 WORKDIR /app
+COPY package.json .
+COPY yarn.lock .
+RUN yarn
 COPY . .
-ENV REACT_APP_API_HOST='http://localhost:8080'
-RUN rm -rf node_modules && yarn
-RUN yarn run build
+RUN yarn build
 
+# => Run container
 FROM nginx:1.21.5-alpine
-COPY --chown=nginx:nginx nginx-ui.conf /etc/nginx/conf.d/default.conf
-COPY --chown=nginx:nginx --from=builder /app/build /var/www/html/
+
+# Nginx config
+RUN rm -rf /etc/nginx/conf.d
+COPY conf /etc/nginx
+
+# Static build
+COPY --from=builder /app/build /usr/share/nginx/html/
+
+# Default port exposure
+EXPOSE 80
+
+# Copy .env file and shell script to container
+WORKDIR /usr/share/nginx/html
+COPY ./env.sh .
+COPY .env .
+
+# Make our shell script executable
+RUN chmod +x env.sh
+
+# Start Nginx server
+CMD ["/bin/sh", "-c", "/usr/share/nginx/html/env.sh && nginx -g \"daemon off;\""]
