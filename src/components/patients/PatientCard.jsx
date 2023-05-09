@@ -4,7 +4,7 @@ import PatientService from '../../services/PatientService'
 import { Link } from 'react-router-dom'
 import PatientCardVisitList from '../visits/PatientCardVisitList'
 import PatientCardReminderList from '../reminders/PatientCardReminderList'
-import getAge from '../../utils/getAge'
+import calculateAge from '../../utils/calculateAge'
 import '../../App.css'
 import { Tabs, Tab } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -81,7 +81,7 @@ export default function PatientCard() {
               {patient.birthDate && (
                 <div>
                   <BiCalendar className='card-info-icon' />
-                  {patient.birthDate} ({getAge(patient.birthDate)} years)
+                  {patient.birthDate} ({calculateAge(patient.birthDate)} years)
                 </div>
               )}
 

@@ -15,8 +15,6 @@ import { CgFileDocument } from 'react-icons/cg'
 
 export default function Header() {
   const isUserLoggedIn = AuthService.isUserLoggedIn()
-  // const user = JSON.parse(localStorage.getItem('user'))
-
   const [count, setCount] = useContext(ReminderContext)
 
   return (

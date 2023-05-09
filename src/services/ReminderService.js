@@ -17,7 +17,9 @@ class ReminderService {
   getActiveCount() {
     return axios.get(REMINDERS_REST_ENDPOINT + 'count/', {
       headers: authHeader(),
-    })
+    }).catch(function (error) {
+      return 0;
+  })
   }
 
   complete(reminderId) {
