@@ -1,8 +1,8 @@
-FROM node:16.10.0-alpine3.14 as build
+FROM --platform=linux/amd64 node:16.10.0-alpine3.14 as build
 
 WORKDIR /app
 COPY . .
-ENV REACT_APP_API_HOST='http://localhost:8000'
+ENV REACT_APP_API_HOST='http://backend'
 RUN rm -rf node_modules && yarn
 RUN npx update-browserslist-db@latest
 RUN yarn run build
