@@ -1,10 +1,11 @@
 import axios from 'axios'
 
-const LOGIN_REST_ENDPOINT = window._env_.REACT_APP_API_HOST + '/api/v1/auth/login'
+const { REACT_APP_API_HOST } = process.env
+const API_URL = REACT_APP_API_HOST + '/api/v1/auth/login'
 
 class AuthService {
   async login(username, password) {
-    const resp = await axios.post(LOGIN_REST_ENDPOINT, {
+    const resp = await axios.post(API_URL, {
       username,
       password,
     })
@@ -20,7 +21,7 @@ class AuthService {
   }
 
   register(username, email, password) {
-    return axios.post(LOGIN_REST_ENDPOINT + 'signup', {
+    return axios.post(API_URL + 'signup', {
       username,
       email,
       password,
