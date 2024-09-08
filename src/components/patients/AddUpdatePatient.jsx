@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import PatientService from '../../services/PatientService'
 import Cleave from 'cleave.js/react'
-import { NumericFormat } from 'react-number-format'
+import { PatternFormat } from 'react-number-format'
 import Form from 'react-bootstrap/Form'
 import { trackPromise } from 'react-promise-tracker'
 
@@ -138,7 +138,7 @@ export default function AddUpdatePatient() {
                 </div>
                 <div className='form-group'>
                   <label>Phone:</label>
-                  <NumericFormat
+                  <PatternFormat
                     className='form-control col-8'
                     format='+#(###)###-####'
                     allowEmptyFormatting
