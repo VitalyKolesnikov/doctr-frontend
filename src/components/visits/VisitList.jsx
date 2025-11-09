@@ -20,7 +20,15 @@ export default function VisitList() {
 
   return (
     <div>
-      <h2 style={{ paddingTop: 6 }}>Visits</h2>
+      <div className='d-flex align-items-baseline pt-2 mb-3'>
+        <h2 className='mb-0'>Visits</h2>
+        <span
+          className='text-muted ml-3'
+          style={{ fontSize: '0.85rem', fontWeight: 500 }}
+        >
+          showing last 400
+        </span>
+      </div>
       {visits.map((visitsDto, idx) => (
         <Fragment key = {"acc_" + idx}>
         <Accordion key={visitsDto.date} defaultActiveKey={1}>
