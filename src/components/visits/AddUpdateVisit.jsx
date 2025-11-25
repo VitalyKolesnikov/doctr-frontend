@@ -94,7 +94,6 @@ export default function AddUpdateVisit() {
       first: first,
       info: info,
     }
-    console.log('visit => ' + JSON.stringify(visit))
 
     if (visitId === '_add') {
       trackPromise(

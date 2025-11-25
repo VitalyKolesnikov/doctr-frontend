@@ -69,7 +69,6 @@ export default function AddUpdateReminder() {
       date: moment(date).format('DD.MM.yyyy'),
       text: text,
     }
-    console.log('reminder => ' + JSON.stringify(reminder))
 
     if (reminderId === '_add') {
       trackPromise(

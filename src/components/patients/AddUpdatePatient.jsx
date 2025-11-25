@@ -50,7 +50,6 @@ export default function AddUpdatePatient() {
       phone: phone && phone.includes('_') ? null : phone,
       info: info,
     }
-    console.log('patient => ' + JSON.stringify(patient))
 
     if (id === '_add') {
       trackPromise(

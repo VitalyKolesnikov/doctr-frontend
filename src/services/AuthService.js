@@ -28,7 +28,18 @@ class AuthService {
   }
 
   getCurrentUser() {
-    return JSON.parse(localStorage.getItem('user'))
+    const userStr = localStorage.getItem('user')
+    if (!userStr) {
+      return null
+    }
+
+    try {
+      return JSON.parse(userStr)
+    } catch (error) {
+      // Если данные повреждены, очищаем localStorage
+      localStorage.removeItem('user')
+      return null
+    }
   }
 
   isUserLoggedIn() {

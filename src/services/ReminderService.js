@@ -18,8 +18,9 @@ class ReminderService {
     return axios.get(REMINDERS_REST_ENDPOINT + 'count/', {
       headers: authHeader(),
     }).catch(function (error) {
-      return 0;
-  })
+      // Возвращаем Promise с объектом, совместимым с axios response
+      return Promise.resolve({ data: 0 })
+    })
   }
 
   complete(reminderId) {

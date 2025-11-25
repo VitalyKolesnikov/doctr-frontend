@@ -25,15 +25,12 @@ export default function VisitCard() {
   const [id] = useState(params.id)
 
   useEffect(() => {
-    console.log('id: ' + id)
     trackPromise(
       VisitService.getById(id).then((resp) => {
-        console.log('data: ' + resp.data.date)
         setVisit(resp.data)
-        console.log(visit)
       })
     )
-  }, [])
+  }, [id])
 
   const editVisit = (id) => {
     history.push({ pathname: `/add-update-visit/${id}` })
