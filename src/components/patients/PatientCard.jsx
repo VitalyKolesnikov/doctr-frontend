@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useHistory, useParams, useLocation } from 'react-router'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import PatientService from '../../services/PatientService'
 import { Link } from 'react-router-dom'
 import PatientCardVisitList from '../visits/PatientCardVisitList'
@@ -10,6 +10,8 @@ import { Tabs, Tab } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { trackPromise } from 'react-promise-tracker'
 import ConfirmModal from '../common/ConfirmModal'
+import { useErrorHandler } from '../../hooks/useErrorHandler'
+import { ROUTES } from '../../constants'
 
 // icons
 import { FaEdit } from 'react-icons/fa'
@@ -23,37 +25,45 @@ import { FiFilePlus } from 'react-icons/fi'
 import { BiBellPlus } from 'react-icons/bi'
 
 export default function PatientCard() {
-  function useQuery() {
-    return new URLSearchParams(useLocation().search)
-  }
+  const [searchParams] = useSearchParams()
+  const [show, setShow] = useState(searchParams.get('show'))
 
-  const query = useQuery()
-  const [show, setShow] = useState(query.get('show'))
-
-  const history = useHistory()
+  const navigate = useNavigate()
   const params = useParams()
+  const { error, handleError, clearError } = useErrorHandler()
 
   const [patient, setPatient] = useState('')
   const [id] = useState(params.id)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
 
   useEffect(() => {
+    clearError()
     trackPromise(
-      PatientService.getById(id).then((resp) => {
-        setPatient(resp.data)
-      })
+      PatientService.getById(id)
+        .then((resp) => {
+          setPatient(resp.data)
+        })
+        .catch((err) => {
+          handleError(err)
+        })
     )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
   const editPatient = (id) => {
-    history.push({ pathname: `/add-update-patient/${id}` })
+    navigate(`/add-update-patient/${id}`)
   }
 
   const deletePatient = (id) => {
+    clearError()
     trackPromise(
-      PatientService.delete(id).then(() => {
-        history.push({ pathname: '/patients' })
-      })
+      PatientService.delete(id)
+        .then(() => {
+          navigate('/patients')
+        })
+        .catch((err) => {
+          handleError(err)
+        })
     )
   }
 
@@ -132,10 +142,13 @@ export default function PatientCard() {
         </div>
       </div>
 
+      {error && (
+        <div className='alert alert-danger'>{error}</div>
+      )}
       <div className='row'>
         <Link
           className='nav-link'
-          to={'/add-update-visit/_add?patientId=' + patient.id}
+          to={`/add-update-visit/${ROUTES.ADD_VISIT}?patientId=${patient.id}`}
         >
           <button className='btn btn-primary'>
             Add visit&nbsp;
@@ -145,7 +158,7 @@ export default function PatientCard() {
 
         <Link
           className='nav-link'
-          to={'/add-update-reminder/_add?patientId=' + patient.id}
+          to={`/add-update-reminder/${ROUTES.ADD_REMINDER}?patientId=${patient.id}`}
         >
           <button className='btn btn-primary'>
             Add reminder&nbsp;

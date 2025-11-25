@@ -5,7 +5,7 @@ import App from './App'
 import reportWebVitals from './reportWebVitals'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { LoadingSpinner } from './components/LoadingSpinner'
-// Инициализация axios interceptor для обработки ошибок
+// Initialize axios interceptor for error handling
 import './services/axios-config'
 
 const container = document.getElementById('root')

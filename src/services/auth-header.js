@@ -10,7 +10,7 @@ export default function authHeader() {
       return { Authorization: 'Bearer ' + user.token }
     }
   } catch (error) {
-    // Если данные повреждены, очищаем localStorage
+    // If data is corrupted, clear localStorage
     localStorage.removeItem('user')
   }
 

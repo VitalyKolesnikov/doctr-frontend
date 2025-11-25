@@ -41,7 +41,7 @@ class AuthService {
     try {
       return JSON.parse(userStr)
     } catch (error) {
-      // Если данные повреждены, очищаем localStorage
+      // If data is corrupted, clear localStorage
       localStorage.removeItem('user')
       return null
     }

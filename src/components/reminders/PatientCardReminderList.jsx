@@ -1,10 +1,11 @@
 import { useState, useEffect, useContext, Fragment } from 'react'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import ReminderService from '../../services/ReminderService'
 import { ReminderContext } from '../ReminderContext'
 import { trackPromise } from 'react-promise-tracker'
 import ConfirmModal from '../common/ConfirmModal'
 import PropTypes from 'prop-types'
+import { useErrorHandler } from '../../hooks/useErrorHandler'
 
 // icons
 import { BiCalendar } from 'react-icons/bi'
@@ -13,35 +14,50 @@ import { FaRegCheckSquare } from 'react-icons/fa'
 import { FaEdit } from 'react-icons/fa'
 
 export default function PatientCardReminderList({ patientId }) {
-  const history = useHistory()
+  const navigate = useNavigate()
   const [count, setCount] = useContext(ReminderContext)
   const [reminders, setReminders] = useState([])
   const [showCompleteModal, setShowCompleteModal] = useState(false)
   const [reminderToComplete, setReminderToComplete] = useState(null)
+  const { error, handleError, clearError } = useErrorHandler()
 
   useEffect(() => {
+    clearError()
     trackPromise(
-      ReminderService.getForPatient(patientId).then((resp) => {
-        setReminders(resp.data)
-      })
+      ReminderService.getForPatient(patientId)
+        .then((resp) => {
+          setReminders(resp.data)
+        })
+        .catch((err) => {
+          handleError(err)
+        })
     )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [patientId])
 
   const complete = (id) => {
+    clearError()
     trackPromise(
-      ReminderService.complete(id).then((resp) => {
-        setCount(resp.data)
-        window.location.href = '/patients/' + patientId + '?show=rem'
-      })
+      ReminderService.complete(id)
+        .then((resp) => {
+          setCount(resp.data)
+          navigate(`/patients/${patientId}?show=rem`)
+        })
+        .catch((err) => {
+          handleError(err)
+        })
     )
   }
 
   const editReminder = (id) => {
-    history.push({ pathname: `/add-update-reminder/${id}` })
+    navigate(`/add-update-reminder/${id}`)
   }
 
   return (
     <div>
+      {error && (
+        <div className='alert alert-danger'>{error}</div>
+      )}
       <br></br>
       <div className='row'>
         {reminders.length === 0 && <h5>No reminders yet</h5>}

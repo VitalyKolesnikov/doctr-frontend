@@ -1,20 +1,31 @@
 import { useState, useEffect } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 import ClinicService from '../../services/ClinicService'
+import { useErrorHandler } from '../../hooks/useErrorHandler'
 
 export default function ClinicListComponent() {
   const [clinics, setClinics] = useState([])
+  const { error, handleError, clearError } = useErrorHandler()
 
   useEffect(() => {
+    clearError()
     trackPromise(
-      ClinicService.getAll().then((resp) => {
-        setClinics(resp.data)
-      })
+      ClinicService.getAll()
+        .then((resp) => {
+          setClinics(resp.data)
+        })
+        .catch((err) => {
+          handleError(err)
+        })
     )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
     <div>
+      {error && (
+        <div className='alert alert-danger'>{error}</div>
+      )}
       <h2 className='text-center'>Clinics</h2>
       <br></br>
       <div className='row'>

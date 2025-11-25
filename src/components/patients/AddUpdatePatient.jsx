@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import PatientService from '../../services/PatientService'
 import Cleave from 'cleave.js/react'
 import { PatternFormat } from 'react-number-format'
 import Form from 'react-bootstrap/Form'
 import { trackPromise } from 'react-promise-tracker'
+import { useErrorHandler } from '../../hooks/useErrorHandler'
+import { ROUTES } from '../../constants'
 
 export default function AddUpdatePatient() {
-  const history = useHistory()
+  const navigate = useNavigate()
   const params = useParams()
+  const { error, handleError, clearError } = useErrorHandler()
 
   const [id] = useState(params.id)
   const [lastName, setLastName] = useState('')
@@ -20,28 +23,36 @@ export default function AddUpdatePatient() {
   const [info, setInfo] = useState('')
 
   useEffect(() => {
-    if (id === '_add') {
+    if (id === ROUTES.ADD_PATIENT) {
       return
     } else {
+      clearError()
       trackPromise(
-        PatientService.getById(id).then((res) => {
-          let patient = res.data
-          setLastName(patient.lastName)
-          setFirstName(patient.firstName)
-          setMiddleName(patient.middleName)
-          setBirthDate(patient.birthDate)
-          setEmail(patient.email)
-          setPhone(patient.phone)
-          setInfo(patient.info)
-        })
+        PatientService.getById(id)
+          .then((res) => {
+            let patient = res.data
+            setLastName(patient.lastName)
+            setFirstName(patient.firstName)
+            setMiddleName(patient.middleName)
+            setBirthDate(patient.birthDate)
+            setEmail(patient.email)
+            setPhone(patient.phone)
+            setInfo(patient.info)
+          })
+          .catch((err) => {
+            handleError(err)
+          })
       )
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
   const savePatient = (e) => {
     e.preventDefault()
+    clearError()
+    
     let patient = {
-      id: id === '_add' ? null : id,
+      id: id === ROUTES.ADD_PATIENT ? null : id,
       firstName: firstName,
       middleName: middleName,
       lastName: lastName,
@@ -51,23 +62,31 @@ export default function AddUpdatePatient() {
       info: info,
     }
 
-    if (id === '_add') {
+    if (id === ROUTES.ADD_PATIENT) {
       trackPromise(
-        PatientService.add(patient).then((resp) => {
-          history.push('/patients/' + resp.data.id)
-        })
+        PatientService.add(patient)
+          .then((resp) => {
+            navigate('/patients/' + resp.data.id)
+          })
+          .catch((err) => {
+            handleError(err)
+          })
       )
     } else {
       trackPromise(
-        PatientService.update(patient, id).then(() => {
-          history.push('/patients/' + id)
-        })
+        PatientService.update(patient, id)
+          .then(() => {
+            navigate('/patients/' + id)
+          })
+          .catch((err) => {
+            handleError(err)
+          })
       )
     }
   }
 
   const getTitle = () => {
-    if (id === '_add') {
+    if (id === ROUTES.ADD_PATIENT) {
       return <h3 className='text-center'>Add patient</h3>
     } else {
       return <h3 className='text-center'>Edit patient</h3>
@@ -75,7 +94,7 @@ export default function AddUpdatePatient() {
   }
 
   const cancel = () => {
-    history.goBack()
+    navigate(-1)
   }
 
   return (
@@ -87,6 +106,9 @@ export default function AddUpdatePatient() {
             <br></br>
             {getTitle()}
             <div className='card-body'>
+              {error && (
+                <div className='alert alert-danger'>{error}</div>
+              )}
               <Form onSubmit={savePatient}>
                 <input type='hidden' name='id' value={id} />
 

@@ -20,19 +20,28 @@ export default function ReminderList() {
 
   useEffect(() => {
     trackPromise(
-      ReminderService.getActive().then((resp) => {
-        setReminders(resp.data)
-      })
+      ReminderService.getActive()
+        .then((resp) => {
+          setReminders(resp.data)
+        })
+        .catch((err) => {
+          console.error('Error loading reminders:', err)
+        })
     )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const complete = (id) => {
     trackPromise(
-      ReminderService.complete(id).then((resp) => {
-        const newReminders = reminders.filter((reminder) => reminder.id !== id)
-        setReminders(newReminders)
-        setCount(resp.data)
-      })
+      ReminderService.complete(id)
+        .then((resp) => {
+          const newReminders = reminders.filter((reminder) => reminder.id !== id)
+          setReminders(newReminders)
+          setCount(resp.data)
+        })
+        .catch((err) => {
+          console.error('Error completing reminder:', err)
+        })
     )
   }
 

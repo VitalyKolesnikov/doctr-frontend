@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useHistory, useParams, useLocation } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import VisitService from '../../services/VisitService'
 import Form from 'react-bootstrap/Form'
 import PatientService from '../../services/PatientService'
@@ -7,89 +7,103 @@ import ClinicService from '../../services/ClinicService'
 import DatePicker, { registerLocale } from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import ru from 'date-fns/locale/ru'
-import moment from 'moment'
+import { parseDate, formatDate } from '../../utils/dateUtils'
 import buildPatientOption from '../../utils/buildPatientOption'
 import { NumericFormat } from 'react-number-format'
 import { trackPromise } from 'react-promise-tracker'
+import { useErrorHandler } from '../../hooks/useErrorHandler'
+import { ROUTES, PERCENT_OPTIONS, DEFAULT_PERCENT } from '../../constants'
+
+registerLocale('ru', { ...ru, options: { ...ru.options, weekStartsOn: 1 } })
 
 export default function AddUpdateVisit() {
-  function useQuery() {
-    return new URLSearchParams(useLocation().search)
-  }
-
-  registerLocale('ru', { ...ru, options: { ...ru.options, weekStartsOn: 1 } })
-
-  const history = useHistory()
+  const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
   const params = useParams()
-  const query = useQuery()
+  const { error, handleError, clearError } = useErrorHandler()
 
   const [visitId] = useState(params.id)
   const [clinicId, setClinicId] = useState('')
-  const [patientId, setPatientId] = useState(query.get('patientId'))
+  const [patientId, setPatientId] = useState(searchParams.get('patientId'))
   const [patientInfo, setPatientInfo] = useState('')
   const [date, setDate] = useState(new Date())
   const [cost, setCost] = useState('')
-  const [percent, setPercent] = useState('25')
+  const [percent, setPercent] = useState(DEFAULT_PERCENT)
   const [child, setChild] = useState('')
   const [first, setFirst] = useState('')
   const [info, setInfo] = useState('')
 
   const [clinics, setClinics] = useState([])
 
-  const percentOptions = [25, 30, 37]
-
   useEffect(() => {
+    clearError()
     trackPromise(
-      ClinicService.getAll().then((resp) => {
-        setClinics(resp.data)
-      })
+      ClinicService.getAll()
+        .then((resp) => {
+          setClinics(resp.data)
+        })
+        .catch((err) => {
+          handleError(err)
+        })
     )
 
-    if (visitId === '_add') {
+    if (visitId === ROUTES.ADD_VISIT) {
       if (patientId) {
         trackPromise(
-          PatientService.getById(patientId).then((res) => {
-            let patient = res.data
-            setPatientInfo(
-              buildPatientOption(
-                patient.lastName,
-                patient.firstName,
-                patient.middleName
+          PatientService.getById(patientId)
+            .then((res) => {
+              let patient = res.data
+              setPatientInfo(
+                buildPatientOption(
+                  patient.lastName,
+                  patient.firstName,
+                  patient.middleName
+                )
               )
-            )
-          })
+            })
+            .catch((err) => {
+              handleError(err)
+            })
         )
       }
     } else {
       trackPromise(
-        VisitService.getById(visitId).then((res) => {
-          let visit = res.data
-          setClinicId(visit.clinic.id)
-          setPatientId(visit.patient.id)
-          setPatientInfo(
-            buildPatientOption(
-              visit.patient.lastName,
-              visit.patient.firstName,
-              visit.patient.middleName
+        VisitService.getById(visitId)
+          .then((res) => {
+            let visit = res.data
+            setClinicId(visit.clinic.id)
+            setPatientId(visit.patient.id)
+            setPatientInfo(
+              buildPatientOption(
+                visit.patient.lastName,
+                visit.patient.firstName,
+                visit.patient.middleName
+              )
             )
-          )
-          setDate(moment(visit.date, 'DD.MM.yyyy'))
-          setCost(visit.cost)
-          setPercent(visit.percent)
-          setChild(visit.child)
-          setFirst(visit.first)
-          setInfo(visit.info)
-        })
+            const parsedDate = parseDate(visit.date)
+            setDate(parsedDate || new Date())
+            setCost(visit.cost)
+            setPercent(visit.percent)
+            setChild(visit.child)
+            setFirst(visit.first)
+            setInfo(visit.info)
+          })
+          .catch((err) => {
+            handleError(err)
+          })
       )
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visitId, patientId])
 
   const saveVisit = (e) => {
     e.preventDefault()
+    clearError()
+    
     let visit = {
       clinicId: clinicId,
       patientId: patientId,
-      date: moment(date).format('DD.MM.yyyy'),
+      date: formatDate(date),
       cost: cost.toString().replace(',', '') || 0,
       percent: percent,
       child: child,
@@ -97,24 +111,32 @@ export default function AddUpdateVisit() {
       info: info,
     }
 
-    if (visitId === '_add') {
+    if (visitId === ROUTES.ADD_VISIT) {
       trackPromise(
-        VisitService.add(visit).then((resp) => {
-          history.push('/visits/' + resp.data.id)
-        })
+        VisitService.add(visit)
+          .then((resp) => {
+            navigate('/visits/' + resp.data.id)
+          })
+          .catch((err) => {
+            handleError(err)
+          })
       )
     } else {
       visit.id = visitId
       trackPromise(
-        VisitService.update(visit, visitId).then(() => {
-          history.push('/visits/' + visitId)
-        })
+        VisitService.update(visit, visitId)
+          .then(() => {
+            navigate('/visits/' + visitId)
+          })
+          .catch((err) => {
+            handleError(err)
+          })
       )
     }
   }
 
   const getTitle = () => {
-    if (visitId === '_add') {
+    if (visitId === ROUTES.ADD_VISIT) {
       return <h3 className='text-center'>Add visit</h3>
     } else {
       return <h3 className='text-center'>Edit visit</h3>
@@ -122,7 +144,7 @@ export default function AddUpdateVisit() {
   }
 
   const cancel = () => {
-    history.goBack()
+    navigate(-1)
   }
 
   return (
@@ -134,6 +156,9 @@ export default function AddUpdateVisit() {
             <br></br>
             {getTitle()}
             <div className='card-body'>
+              {error && (
+                <div className='alert alert-danger'>{error}</div>
+              )}
               <Form onSubmit={saveVisit}>
                 <div className='form-group'>
                   <label>Patient:</label>
@@ -200,7 +225,7 @@ export default function AddUpdateVisit() {
                   />
                 </div>
 
-                {percentOptions.map((val, idx) => {
+                {PERCENT_OPTIONS.map((val, idx) => {
                   return (
                     <div className='form-check' key={idx}>
                       <input
@@ -262,8 +287,9 @@ export default function AddUpdateVisit() {
                   Save
                 </button>
                 <button
+                  type='button'
                   className='btn btn-danger'
-                  onClick={cancel.bind(this)}
+                  onClick={cancel}
                   style={{ marginLeft: '10px' }}
                 >
                   Cancel

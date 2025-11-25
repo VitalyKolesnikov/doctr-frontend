@@ -6,20 +6,31 @@ import Cost from '../Cost'
 import VisitService from '../../services/VisitService'
 import makeInitials from '../../utils/makeInitials'
 import { trackPromise } from 'react-promise-tracker'
+import { useErrorHandler } from '../../hooks/useErrorHandler'
 
 export default function VisitList() {
   const [visits, setVisits] = useState([])
+  const { error, handleError, clearError } = useErrorHandler()
 
   useEffect(() => {
+    clearError()
     trackPromise(
-      VisitService.getAll().then((resp) => {
-        setVisits(resp.data)
-      })
+      VisitService.getAll()
+        .then((resp) => {
+          setVisits(resp.data)
+        })
+        .catch((err) => {
+          handleError(err)
+        })
     )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
     <div>
+      {error && (
+        <div className='alert alert-danger'>{error}</div>
+      )}
       <div className='d-flex align-items-baseline pt-2 mb-3'>
         <h2 className='mb-0'>Visits</h2>
         <span
@@ -72,7 +83,7 @@ export default function VisitList() {
                 ))}
                 <div style={{ color: 'red' }}>
                   Total: <Cost value={visitsDto.totalSum} /> /{' '}
-                  <Cost value={visitsDto.totalShare} /> руб.
+                  <Cost value={visitsDto.totalShare} /> RUB
                 </div>
               </Card.Body>
             </Accordion.Collapse>
