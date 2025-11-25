@@ -3,6 +3,8 @@ import { useHistory } from 'react-router'
 import ReminderService from '../../services/ReminderService'
 import { ReminderContext } from '../ReminderContext'
 import { trackPromise } from 'react-promise-tracker'
+import ConfirmModal from '../common/ConfirmModal'
+import PropTypes from 'prop-types'
 
 // icons
 import { BiCalendar } from 'react-icons/bi'
@@ -14,6 +16,8 @@ export default function PatientCardReminderList({ patientId }) {
   const history = useHistory()
   const [count, setCount] = useContext(ReminderContext)
   const [reminders, setReminders] = useState([])
+  const [showCompleteModal, setShowCompleteModal] = useState(false)
+  const [reminderToComplete, setReminderToComplete] = useState(null)
 
   useEffect(() => {
     trackPromise(
@@ -76,11 +80,10 @@ export default function PatientCardReminderList({ patientId }) {
             {reminder.status === 'ACTIVE' && (
               <div className='col-2 col-lg-2'>
                 <FaRegCheckSquare
-                  style={{ color: 'green', fontSize: '2em' }}
+                  style={{ color: 'green', fontSize: '2em', cursor: 'pointer' }}
                   onClick={() => {
-                    if (window.confirm('Are you sure?')) {
-                      complete(reminder.id)
-                    }
+                    setReminderToComplete(reminder.id)
+                    setShowCompleteModal(true)
                   }}
                 />
               </div>
@@ -89,6 +92,26 @@ export default function PatientCardReminderList({ patientId }) {
         ))}
       </div>
       <br></br>
+
+      <ConfirmModal
+        show={showCompleteModal}
+        onConfirm={() => {
+          if (reminderToComplete) {
+            complete(reminderToComplete)
+            setShowCompleteModal(false)
+            setReminderToComplete(null)
+          }
+        }}
+        onCancel={() => {
+          setShowCompleteModal(false)
+          setReminderToComplete(null)
+        }}
+        message='Are you sure?'
+      />
     </div>
   )
+}
+
+PatientCardReminderList.propTypes = {
+  patientId: PropTypes.string.isRequired,
 }

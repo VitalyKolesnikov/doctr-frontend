@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import VisitService from '../../services/VisitService'
 import Cost from '../Cost'
 import { trackPromise } from 'react-promise-tracker'
+import PropTypes from 'prop-types'
 
 export default function VisitList({ patientId }) {
   const [visits, setVisits] = useState([])
@@ -21,7 +22,7 @@ export default function VisitList({ patientId }) {
       <div className='row'>
         {visits.length === 0 && <h5>No visits yet</h5>}
         {visits.map((visit) => (
-          <table className='table table-striped table-bordered table-sm'>
+          <table key={visit.id} className='table table-striped table-bordered table-sm'>
             <tbody>
               <tr>
                 <td width='35%'>
@@ -44,4 +45,8 @@ export default function VisitList({ patientId }) {
       <br></br>
     </div>
   )
+}
+
+VisitList.propTypes = {
+  patientId: PropTypes.string.isRequired,
 }

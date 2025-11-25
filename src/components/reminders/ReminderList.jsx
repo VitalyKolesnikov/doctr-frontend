@@ -4,6 +4,7 @@ import makeInitials from '../../utils/makeInitials'
 import ReminderService from '../../services/ReminderService'
 import { ReminderContext } from '../ReminderContext'
 import { trackPromise } from 'react-promise-tracker'
+import ConfirmModal from '../common/ConfirmModal'
 
 // icons
 import { BsPersonFill } from 'react-icons/bs'
@@ -14,6 +15,8 @@ import { FaRegCheckSquare } from 'react-icons/fa'
 export default function ReminderList() {
   const [count, setCount] = useContext(ReminderContext)
   const [reminders, setReminders] = useState([])
+  const [showCompleteModal, setShowCompleteModal] = useState(false)
+  const [reminderToComplete, setReminderToComplete] = useState(null)
 
   useEffect(() => {
     trackPromise(
@@ -75,17 +78,32 @@ export default function ReminderList() {
             </div>
             <div className='col-2 col-lg-8'>
               <FaRegCheckSquare
-                style={{ color: 'green', fontSize: '2em' }}
+                style={{ color: 'green', fontSize: '2em', cursor: 'pointer' }}
                 onClick={() => {
-                  if (window.confirm('Are you sure?')) {
-                    complete(reminder.id)
-                  }
+                  setReminderToComplete(reminder.id)
+                  setShowCompleteModal(true)
                 }}
               />
             </div>
           </Fragment>
         ))}
       </div>
+
+      <ConfirmModal
+        show={showCompleteModal}
+        onConfirm={() => {
+          if (reminderToComplete) {
+            complete(reminderToComplete)
+            setShowCompleteModal(false)
+            setReminderToComplete(null)
+          }
+        }}
+        onCancel={() => {
+          setShowCompleteModal(false)
+          setReminderToComplete(null)
+        }}
+        message='Are you sure?'
+      />
     </div>
   )
 }

@@ -9,6 +9,7 @@ import '../../App.css'
 import { Tabs, Tab } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { trackPromise } from 'react-promise-tracker'
+import ConfirmModal from '../common/ConfirmModal'
 
 // icons
 import { FaEdit } from 'react-icons/fa'
@@ -34,6 +35,7 @@ export default function PatientCard() {
 
   const [patient, setPatient] = useState('')
   const [id] = useState(params.id)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
 
   useEffect(() => {
     trackPromise(
@@ -41,7 +43,7 @@ export default function PatientCard() {
         setPatient(resp.data)
       })
     )
-  }, [])
+  }, [id])
 
   const editPatient = (id) => {
     history.push({ pathname: `/add-update-patient/${id}` })
@@ -118,11 +120,7 @@ export default function PatientCard() {
               </div>
               <div className='row'>
                 <button
-                  onClick={() => {
-                    if (window.confirm('Are you sure?')) {
-                      deletePatient(patient.id)
-                    }
-                  }}
+                  onClick={() => setShowDeleteModal(true)}
                   className='btn btn-danger'
                   style={{ marginLeft: '35px' }}
                 >
@@ -170,6 +168,16 @@ export default function PatientCard() {
           </div>
         </Tab>
       </Tabs>
+
+      <ConfirmModal
+        show={showDeleteModal}
+        onConfirm={() => {
+          deletePatient(patient.id)
+          setShowDeleteModal(false)
+        }}
+        onCancel={() => setShowDeleteModal(false)}
+        message='Are you sure?'
+      />
     </div>
   )
 }

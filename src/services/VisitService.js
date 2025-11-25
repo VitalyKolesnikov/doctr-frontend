@@ -1,7 +1,8 @@
 import axios from 'axios'
 import authHeader from './auth-header'
+import API_CONFIG from '../config/api'
 
-const VISITS_REST_ENDPOINT = '/api/v1/visits/'
+const VISITS_REST_ENDPOINT = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.VISITS
 
 class VisitService {
   getAll() {

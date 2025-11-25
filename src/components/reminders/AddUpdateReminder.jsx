@@ -31,18 +31,20 @@ export default function AddUpdateReminder() {
 
   useEffect(() => {
     if (reminderId === '_add') {
-      trackPromise(
-        PatientService.getById(patientId).then((res) => {
-          let patient = res.data
-          setPatientInfo(
-            buildPatientOption(
-              patient.lastName,
-              patient.firstName,
-              patient.middleName
+      if (patientId) {
+        trackPromise(
+          PatientService.getById(patientId).then((res) => {
+            let patient = res.data
+            setPatientInfo(
+              buildPatientOption(
+                patient.lastName,
+                patient.firstName,
+                patient.middleName
+              )
             )
-          )
-        })
-      )
+          })
+        )
+      }
     } else {
       trackPromise(
         ReminderService.getById(reminderId).then((res) => {
@@ -60,7 +62,7 @@ export default function AddUpdateReminder() {
         })
       )
     }
-  }, [])
+  }, [reminderId, patientId])
 
   const saveReminder = (e) => {
     e.preventDefault()

@@ -46,18 +46,20 @@ export default function AddUpdateVisit() {
     )
 
     if (visitId === '_add') {
-      trackPromise(
-        PatientService.getById(patientId).then((res) => {
-          let patient = res.data
-          setPatientInfo(
-            buildPatientOption(
-              patient.lastName,
-              patient.firstName,
-              patient.middleName
+      if (patientId) {
+        trackPromise(
+          PatientService.getById(patientId).then((res) => {
+            let patient = res.data
+            setPatientInfo(
+              buildPatientOption(
+                patient.lastName,
+                patient.firstName,
+                patient.middleName
+              )
             )
-          )
-        })
-      )
+          })
+        )
+      }
     } else {
       trackPromise(
         VisitService.getById(visitId).then((res) => {
@@ -80,7 +82,7 @@ export default function AddUpdateVisit() {
         })
       )
     }
-  }, [])
+  }, [visitId, patientId])
 
   const saveVisit = (e) => {
     e.preventDefault()

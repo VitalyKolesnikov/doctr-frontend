@@ -5,6 +5,7 @@ import Cost from '../Cost'
 import { Link } from 'react-router-dom'
 import '../../App.css'
 import { trackPromise } from 'react-promise-tracker'
+import ConfirmModal from '../common/ConfirmModal'
 
 // icons
 import { FaEdit } from 'react-icons/fa'
@@ -23,6 +24,7 @@ export default function VisitCard() {
 
   const [visit, setVisit] = useState([])
   const [id] = useState(params.id)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
 
   useEffect(() => {
     trackPromise(
@@ -122,11 +124,7 @@ export default function VisitCard() {
                   </div>
                   <div className='row'>
                     <button
-                      onClick={() => {
-                        if (window.confirm('Are you sure?')) {
-                          deleteVisit(visit.id)
-                        }
-                      }}
+                      onClick={() => setShowDeleteModal(true)}
                       className='btn btn-danger'
                       style={{ marginLeft: '35px' }}
                     >
@@ -145,6 +143,16 @@ export default function VisitCard() {
           </div>
         </div>
       )}
+
+      <ConfirmModal
+        show={showDeleteModal}
+        onConfirm={() => {
+          deleteVisit(visit.id)
+          setShowDeleteModal(false)
+        }}
+        onCancel={() => setShowDeleteModal(false)}
+        message='Are you sure?'
+      />
     </>
   )
 }

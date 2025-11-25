@@ -36,7 +36,7 @@ export default function AddUpdatePatient() {
         })
       )
     }
-  }, [])
+  }, [id])
 
   const savePatient = (e) => {
     e.preventDefault()
