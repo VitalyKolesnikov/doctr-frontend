@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AuthService from '../../services/AuthService.js'
 import Form from 'react-bootstrap/Form'
@@ -13,6 +13,15 @@ export default function Login() {
   const [loginFailed, setLoginFailed] = useState(false)
   const [validationErrors, setValidationErrors] = useState({})
   const { error, handleError, clearError } = useErrorHandler()
+  const formRef = useRef(null)
+  const autoSubmitTimeoutRef = useRef(null)
+  const isAutoSubmittingRef = useRef(false)
+
+  useEffect(() => {
+    if (AuthService.isUserLoggedIn()) {
+      navigate('/', { replace: true })
+    }
+  }, [navigate])
 
   const validateForm = () => {
     const errors = {}
@@ -33,7 +42,7 @@ export default function Login() {
     return Object.keys(errors).length === 0
   }
 
-  const loginClicked = (e) => {
+  const loginClicked = useCallback((e) => {
     e.preventDefault()
     clearError()
     setLoginFailed(false)
@@ -53,62 +62,176 @@ export default function Login() {
           setLoginFailed(true)
         })
     )
-  }
+  }, [username, password, navigate, clearError, handleError])
+
+  // Автоматическая отправка формы после автозаполнения на iPhone
+  useEffect(() => {
+    // Пропускаем автоматическую отправку, если уже идет процесс отправки
+    if (isAutoSubmittingRef.current) {
+      return
+    }
+
+    // Проверяем, заполнены ли оба поля
+    if (username.trim() && password && formRef.current) {
+      // Очищаем предыдущий таймаут, если он есть
+      if (autoSubmitTimeoutRef.current) {
+        clearTimeout(autoSubmitTimeoutRef.current)
+      }
+      
+      // Устанавливаем таймаут для автоматической отправки
+      // Небольшая задержка нужна, чтобы убедиться, что оба поля заполнены
+      autoSubmitTimeoutRef.current = setTimeout(() => {
+        // Проверяем еще раз, что оба поля заполнены
+        if (username.trim() && password && formRef.current && !isAutoSubmittingRef.current) {
+          // Проверяем валидность перед отправкой
+          if (username.trim().length >= 3 && password.length >= 4) {
+            isAutoSubmittingRef.current = true
+            // Создаем синтетическое событие и вызываем обработчик напрямую
+            const syntheticEvent = {
+              preventDefault: () => {},
+              target: formRef.current,
+              currentTarget: formRef.current
+            }
+            loginClicked(syntheticEvent)
+            // Сбрасываем флаг через небольшую задержку
+            setTimeout(() => {
+              isAutoSubmittingRef.current = false
+            }, 1000)
+          }
+        }
+      }, 300) // Задержка 300ms для автозаполнения
+    }
+
+    // Очистка таймаута при размонтировании
+    return () => {
+      if (autoSubmitTimeoutRef.current) {
+        clearTimeout(autoSubmitTimeoutRef.current)
+      }
+    }
+  }, [username, password, loginClicked])
 
   return (
-    <div className='Login col-6'>
-      <Form onSubmit={loginClicked}>
-        <Form.Group controlId='username'>
-          <Form.Label>Username</Form.Label>
-          <Form.Control
-            type='text'
-            name='username'
-            value={username}
-            onChange={(e) => {
-              setUsername(e.target.value)
-              if (validationErrors.username) {
-                setValidationErrors({ ...validationErrors, username: '' })
-              }
-            }}
-            isInvalid={!!validationErrors.username}
-          />
-          {validationErrors.username && (
-            <Form.Control.Feedback type='invalid'>
-              {validationErrors.username}
-            </Form.Control.Feedback>
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '2rem 1rem',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+    }}>
+      <div className='card' style={{
+        maxWidth: '450px',
+        width: '100%',
+        padding: '3rem 2.5rem',
+        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
+      }}>
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <h2 style={{ 
+            fontWeight: 600,
+            color: '#1e293b',
+            marginBottom: '0.5rem'
+          }}>
+            Welcome to DoctR
+          </h2>
+          <p style={{ color: '#64748b', margin: 0 }}>
+            Sign in to continue
+          </p>
+        </div>
+        
+        <Form ref={formRef} onSubmit={loginClicked}>
+          <Form.Group controlId='username' style={{ marginBottom: '1.5rem' }}>
+            <Form.Label style={{ 
+              fontWeight: 500,
+              marginBottom: '0.5rem',
+              color: '#1e293b'
+            }}>
+              Username
+            </Form.Label>
+            <Form.Control
+              type='text'
+              name='username'
+              autoComplete='username'
+              value={username}
+              onChange={(e) => {
+                setUsername(e.target.value)
+                if (validationErrors.username) {
+                  setValidationErrors({ ...validationErrors, username: '' })
+                }
+              }}
+              isInvalid={!!validationErrors.username}
+              style={{
+                padding: '0.75rem 1rem',
+                fontSize: '1rem',
+                borderRadius: '8px'
+              }}
+            />
+            {validationErrors.username && (
+              <Form.Control.Feedback type='invalid' style={{ display: 'block', marginTop: '0.5rem' }}>
+                {validationErrors.username}
+              </Form.Control.Feedback>
+            )}
+          </Form.Group>
+          
+          <Form.Group size='lg' controlId='password' style={{ marginBottom: '2rem' }}>
+            <Form.Label style={{ 
+              fontWeight: 500,
+              marginBottom: '0.5rem',
+              color: '#1e293b'
+            }}>
+              Password
+            </Form.Label>
+            <Form.Control
+              type='password'
+              name='password'
+              autoComplete='current-password'
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value)
+                if (validationErrors.password) {
+                  setValidationErrors({ ...validationErrors, password: '' })
+                }
+              }}
+              isInvalid={!!validationErrors.password}
+              style={{
+                padding: '0.75rem 1rem',
+                fontSize: '1rem',
+                borderRadius: '8px'
+              }}
+            />
+            {validationErrors.password && (
+              <Form.Control.Feedback type='invalid' style={{ display: 'block', marginTop: '0.5rem' }}>
+                {validationErrors.password}
+              </Form.Control.Feedback>
+            )}
+          </Form.Group>
+          
+          <Form.Group style={{ marginBottom: '1rem' }}>
+            <Button 
+              type='submit' 
+              className='btn btn-primary'
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                fontSize: '1rem',
+                fontWeight: 600,
+                borderRadius: '8px'
+              }}
+            >
+              Login
+            </Button>
+          </Form.Group>
+          
+          {loginFailed && (
+            <div className='alert alert-danger' style={{
+              marginTop: '1rem',
+              borderRadius: '8px',
+              padding: '0.75rem 1rem'
+            }}>
+              {error || 'Invalid login/password'}
+            </div>
           )}
-        </Form.Group>
-        <Form.Group size='lg' controlId='password'>
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type='password'
-            name='password'
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value)
-              if (validationErrors.password) {
-                setValidationErrors({ ...validationErrors, password: '' })
-              }
-            }}
-            isInvalid={!!validationErrors.password}
-          />
-          {validationErrors.password && (
-            <Form.Control.Feedback type='invalid'>
-              {validationErrors.password}
-            </Form.Control.Feedback>
-          )}
-        </Form.Group>
-        <Form.Group>
-          <Button type='submit' className='btn btn-success'>
-            Login
-          </Button>
-        </Form.Group>
-        {loginFailed && (
-          <div className='row alert alert-danger'>
-            {error || 'Invalid login/password'}
-          </div>
-        )}
-      </Form>
+        </Form>
+      </div>
     </div>
   )
 }

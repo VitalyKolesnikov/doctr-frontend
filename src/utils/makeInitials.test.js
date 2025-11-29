@@ -21,4 +21,3 @@ describe('makeInitials', () => {
     expect(result).toBe('. M.')
   })
 })
-

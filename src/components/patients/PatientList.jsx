@@ -20,6 +20,16 @@ export default function PatientList() {
   const [isLoading, setIsLoading] = useState(false)
   const [options, setOptions] = useState([])
   const { error, handleError, clearError } = useErrorHandler()
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   const handleSearch = (query) => {
     setIsLoading(true)
@@ -56,74 +66,189 @@ export default function PatientList() {
   }, [])
 
   return (
-    <div>
-      <div className='container'>
-        <div className='row'>
-          <h2 style={{ paddingTop: 6 }}>Patients</h2>
-          <Link className='nav-link' to={`/add-update-patient/${ROUTES.ADD_PATIENT}`}>
-            <button className='btn btn-primary'>
-              <BsPersonPlusFill size='1.3em' />
+    <div style={{ 
+      padding: '2rem 0', 
+      minHeight: 'calc(100vh - 200px)',
+      display: 'flex',
+      flexDirection: 'column',
+      position: 'relative',
+      overflow: 'visible'
+    }}>
+      <div className='container' style={{ 
+        display: 'flex',
+        flexDirection: 'column',
+        flex: 1,
+        minHeight: 0,
+        position: 'relative',
+        overflow: 'visible'
+      }}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '2rem',
+          flexWrap: 'wrap',
+          gap: '1rem',
+          flexShrink: 0
+        }}>
+          <h2 style={{ margin: 0, fontWeight: 600 }}>Patients</h2>
+          <Link to={`/add-update-patient/${ROUTES.ADD_PATIENT}`} style={{ textDecoration: 'none' }}>
+            <button className='btn btn-primary' style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              padding: '0.75rem 1.5rem'
+            }}>
+              <BsPersonPlusFill size='1.2em' />
+              <span>Add Patient</span>
             </button>
           </Link>
         </div>
-      </div>
 
-      <div className='row'>
-        <div className='col-12 col-lg-5' style={{ paddingTop: 8 }}>
+        <div className='card patient-search-card' style={{ 
+          marginBottom: '2rem', 
+          padding: '1.5rem',
+          flexShrink: 0,
+          overflow: 'visible',
+          position: 'relative',
+          zIndex: 100
+        }}>
           <Form>
-            <div className='form-group'>
-              <AsyncTypeahead
-                id='patientSelect'
-                name='patient'
-                minLength={2}
-                onChange={(e) => navigate('/patients/' + e[0].id)}
-                isLoading={isLoading}
-                labelKey={(opt) =>
-                  buildPatientOption(
-                    opt.lastName,
-                    opt.firstName,
-                    opt.middleName
-                  )
-                }
-                onSearch={handleSearch}
-                options={options}
-                placeholder='Search'
-                highlightOnlyResult
-                inputProps={{ required: true }}
-              />
+            <div className='form-group' style={{ margin: 0, position: 'relative' }}>
+              <label style={{
+                fontWeight: 500,
+                marginBottom: '0.5rem',
+                display: 'block',
+                color: '#1e293b'
+              }}>
+                Search Patients
+              </label>
+              <div style={{ position: 'relative', zIndex: 1000 }}>
+                <AsyncTypeahead
+                  id='patientSelect'
+                  name='patient'
+                  minLength={2}
+                  onChange={(e) => navigate('/patients/' + e[0].id)}
+                  isLoading={isLoading}
+                  labelKey={(opt) =>
+                    buildPatientOption(
+                      opt.lastName,
+                      opt.firstName,
+                      opt.middleName
+                    )
+                  }
+                  onSearch={handleSearch}
+                  options={options}
+                  placeholder='Type patient name...'
+                  highlightOnlyResult
+                  flip={true}
+                  dropup={isMobile}
+                  inputProps={{ 
+                    required: true,
+                    style: {
+                      borderRadius: '8px',
+                      border: '1px solid #e2e8f0',
+                      padding: '0.75rem 1rem'
+                    }
+                  }}
+                />
+              </div>
             </div>
           </Form>
         </div>
-      </div>
 
-      {error && (
-        <div className='row alert alert-danger'>{error}</div>
-      )}
-      <div className='row'>
-        <table className='table table-striped table-bordered table-sm'>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Birth Date</th>
-            </tr>
-          </thead>
+        {error && (
+          <div className='alert alert-danger' style={{ 
+            borderRadius: '8px',
+            flexShrink: 0,
+            marginBottom: '1rem'
+          }}>
+            {error}
+          </div>
+        )}
+        
+        <div className='card' style={{ 
+          overflow: 'hidden',
+          flex: 1,
+          minHeight: 0,
+          display: 'flex',
+          flexDirection: 'column'
+        }}>
+          <div style={{ 
+            overflowX: 'auto',
+            overflowY: 'auto',
+            flex: 1,
+            minHeight: 0
+          }}>
+            <table className='table' style={{ margin: 0 }}>
+              <thead style={{ position: 'sticky', top: 0, zIndex: 10 }}>
+                <tr>
+                  <th style={{ 
+                    padding: '1rem',
+                    fontWeight: 600,
+                    backgroundColor: '#f8fafc',
+                    borderBottom: '2px solid #e2e8f0'
+                  }}>
+                    Name
+                  </th>
+                  <th style={{ 
+                    padding: '1rem',
+                    fontWeight: 600,
+                    backgroundColor: '#f8fafc',
+                    borderBottom: '2px solid #e2e8f0'
+                  }}>
+                    Birth Date
+                  </th>
+                </tr>
+              </thead>
 
-          <tbody>
-            {patients.map((patient) => (
-              <tr key={patient.id}>
-                <td>
-                  <Link to={'/patients/' + patient.id}>
-                    {patient.lastName}{' '}
-                    {makeInitials(patient.firstName, patient.middleName)}
-                  </Link>
-                </td>
-                <td>{patient.birthDate}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <br></br>
-        <br></br>
+              <tbody>
+                {patients.length === 0 ? (
+                  <tr>
+                    <td colSpan='2' style={{ 
+                      padding: '2rem',
+                      textAlign: 'center',
+                      color: '#64748b'
+                    }}>
+                      No patients found
+                    </td>
+                  </tr>
+                ) : (
+                  patients.map((patient) => (
+                    <tr 
+                      key={patient.id}
+                      style={{
+                        transition: 'background-color 0.2s',
+                        cursor: 'pointer'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f8fafc'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                    >
+                      <td style={{ padding: '1rem' }}>
+                        <Link 
+                          to={'/patients/' + patient.id}
+                          style={{
+                            color: '#2563eb',
+                            fontWeight: 500,
+                            textDecoration: 'none'
+                          }}
+                          onMouseEnter={(e) => e.currentTarget.style.textDecoration = 'underline'}
+                          onMouseLeave={(e) => e.currentTarget.style.textDecoration = 'none'}
+                        >
+                          {patient.lastName}{' '}
+                          {makeInitials(patient.firstName, patient.middleName)}
+                        </Link>
+                      </td>
+                      <td style={{ padding: '1rem', color: '#475569' }}>
+                        {patient.birthDate}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   )

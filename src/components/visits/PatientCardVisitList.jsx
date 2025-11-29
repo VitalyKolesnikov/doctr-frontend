@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import VisitService from '../../services/VisitService'
 import Cost from '../Cost'
 import { trackPromise } from 'react-promise-tracker'
@@ -7,6 +7,7 @@ import PropTypes from 'prop-types'
 import { useErrorHandler } from '../../hooks/useErrorHandler'
 
 export default function VisitList({ patientId }) {
+  const navigate = useNavigate()
   const [visits, setVisits] = useState([])
   const { error, handleError, clearError } = useErrorHandler()
 
@@ -33,12 +34,23 @@ export default function VisitList({ patientId }) {
       <div className='row'>
         {visits.length === 0 && <h5>No visits yet</h5>}
         {visits.map((visit) => (
-          <table key={visit.id} className='table table-striped table-bordered table-sm'>
+          <table 
+            key={visit.id} 
+            className='table table-striped table-bordered table-sm'
+            style={{ cursor: 'pointer' }}
+            onClick={() => navigate('/visits/' + visit.id)}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#f8fafc'
+              e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = ''
+              e.currentTarget.style.boxShadow = 'none'
+            }}
+          >
             <tbody>
               <tr>
-                <td width='35%'>
-                  <Link to={'/visits/' + visit.id}>{visit.date}</Link>
-                </td>
+                <td width='35%'>{visit.date}</td>
                 <td width='30%'>{visit.clinic.name}</td>
                 <td>
                   <Cost value={visit.cost} /> RUB

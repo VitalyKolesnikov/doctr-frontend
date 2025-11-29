@@ -98,16 +98,18 @@ export default function AddUpdatePatient() {
   }
 
   return (
-    <div>
-      <br></br>
+    <div style={{ padding: '2rem 0', minHeight: 'calc(100vh - 200px)' }}>
       <div className='container'>
-        <div className='row'>
-          <div className='card col-md-6 offset-md-3 offset-md-3'>
-            <br></br>
-            {getTitle()}
+        <div style={{ maxWidth: '700px', margin: '0 auto' }}>
+          <div className='card fade-in'>
             <div className='card-body'>
+              <div style={{ marginBottom: '2rem', textAlign: 'center' }}>
+                {getTitle()}
+              </div>
               {error && (
-                <div className='alert alert-danger'>{error}</div>
+                <div className='alert alert-danger' style={{ borderRadius: '8px' }}>
+                  {error}
+                </div>
               )}
               <Form onSubmit={savePatient}>
                 <input type='hidden' name='id' value={id} />
@@ -190,22 +192,29 @@ export default function AddUpdatePatient() {
                   ></textarea>
                 </div>
 
-                <button type='submit' className='btn btn-success'>
-                  Save
-                </button>
-                <button
-                  className='btn btn-danger'
-                  onClick={cancel}
-                  style={{ marginLeft: '10px' }}
-                >
-                  Cancel
-                </button>
+                <div style={{
+                  display: 'flex',
+                  gap: '1rem',
+                  marginTop: '2rem',
+                  justifyContent: 'flex-end',
+                  flexWrap: 'wrap'
+                }}>
+                  <button
+                    type='button'
+                    className='btn btn-secondary'
+                    onClick={cancel}
+                  >
+                    Cancel
+                  </button>
+                  <button type='submit' className='btn btn-success'>
+                    Save
+                  </button>
+                </div>
               </Form>
             </div>
           </div>
         </div>
       </div>
-      <br></br>
     </div>
   )
 }

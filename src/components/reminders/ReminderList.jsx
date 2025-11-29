@@ -46,73 +46,149 @@ export default function ReminderList() {
   }
 
   return (
-    <div>
+    <div style={{ padding: '2rem 0', minHeight: 'calc(100vh - 200px)' }}>
       <div className='container'>
-        <div className='row'>
-          <h2 style={{ paddingTop: 6 }}>Reminders</h2>
-        </div>
-      </div>
+        <h2 style={{ marginBottom: '2rem', fontWeight: 600 }}>Reminders</h2>
 
-      <br></br>
-      <div className='row'>
-        {reminders.length === 0 && (
-          <h5>&nbsp;&nbsp;&nbsp; No active reminders</h5>
-        )}
-        {reminders.map((reminder) => (
-          <Fragment key = {reminder.id}>
-            <div className='col-8 col-lg-4'>
-              <div>
-                <BsPersonFill className='card-info-icon' />
-                <Link to={'/patients/' + reminder.patient.id + '?show=rem'}>
-                  {reminder.patient.lastName}{' '}
-                  {makeInitials(
-                    reminder.patient.firstName,
-                    reminder.patient.middleName
-                  )}
-                </Link>
-              </div>
-
-              <div>
-                <BiCalendar className='card-info-icon' />
-                {reminder.date}
-              </div>
-
-              {reminder.text && (
-                <div>
-                  <ImInfo className='card-info-icon' />
-                  {reminder.text}
-                </div>
-              )}
-              <hr></hr>
-            </div>
-            <div className='col-2 col-lg-8'>
-              <FaRegCheckSquare
-                style={{ color: 'green', fontSize: '2em', cursor: 'pointer' }}
-                onClick={() => {
-                  setReminderToComplete(reminder.id)
-                  setShowCompleteModal(true)
+        {reminders.length === 0 ? (
+          <div className='card' style={{
+            padding: '3rem',
+            textAlign: 'center',
+            color: '#64748b'
+          }}>
+            <p style={{ margin: 0, fontSize: '1.1rem' }}>No active reminders</p>
+          </div>
+        ) : (
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+            gap: '1.5rem'
+          }}>
+            {reminders.map((reminder) => (
+              <div
+                key={reminder.id}
+                className='card fade-in'
+                style={{
+                  padding: '1.5rem',
+                  position: 'relative',
+                  transition: 'all 0.2s'
                 }}
-              />
-            </div>
-          </Fragment>
-        ))}
-      </div>
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-4px)'
+                  e.currentTarget.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.15)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)'
+                  e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                }}
+              >
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start',
+                  marginBottom: '1rem'
+                }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      marginBottom: '0.75rem'
+                    }}>
+                      <BsPersonFill className='card-info-icon' />
+                      <Link
+                        to={'/patients/' + reminder.patient.id + '?show=rem'}
+                        style={{
+                          color: '#2563eb',
+                          fontWeight: 600,
+                          textDecoration: 'none'
+                        }}
+                      >
+                        {reminder.patient.lastName}{' '}
+                        {makeInitials(
+                          reminder.patient.firstName,
+                          reminder.patient.middleName
+                        )}
+                      </Link>
+                    </div>
 
-      <ConfirmModal
-        show={showCompleteModal}
-        onConfirm={() => {
-          if (reminderToComplete) {
-            complete(reminderToComplete)
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      marginBottom: '0.75rem',
+                      color: '#475569'
+                    }}>
+                      <BiCalendar className='card-info-icon' />
+                      <span style={{ fontWeight: 500 }}>{reminder.date}</span>
+                    </div>
+
+                    {reminder.text && (
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: '0.5rem',
+                        color: '#475569',
+                        marginTop: '0.75rem'
+                      }}>
+                        <ImInfo className='card-info-icon' style={{ marginTop: '0.25rem' }} />
+                        <span>{reminder.text}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      setReminderToComplete(reminder.id)
+                      setShowCompleteModal(true)
+                    }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      padding: '0.5rem',
+                      borderRadius: '8px',
+                      transition: 'background-color 0.2s',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginLeft: '1rem'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f1f5f9'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                  >
+                    <FaRegCheckSquare
+                      style={{
+                        color: '#10b981',
+                        fontSize: '1.75rem',
+                        transition: 'transform 0.2s'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+                      onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                    />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <ConfirmModal
+          show={showCompleteModal}
+          onConfirm={() => {
+            if (reminderToComplete) {
+              complete(reminderToComplete)
+              setShowCompleteModal(false)
+              setReminderToComplete(null)
+            }
+          }}
+          onCancel={() => {
             setShowCompleteModal(false)
             setReminderToComplete(null)
-          }
-        }}
-        onCancel={() => {
-          setShowCompleteModal(false)
-          setReminderToComplete(null)
-        }}
-        message='Are you sure?'
-      />
+          }}
+          message='Are you sure?'
+        />
+      </div>
     </div>
   )
 }

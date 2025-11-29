@@ -1,11 +1,9 @@
 export default function Footer() {
   return (
-    <div>
-      <footer className='footer bg-dark'>
-        <span className='text-muted'>
-          {new Date().getFullYear()} © Vitaly Kolesnikov
-        </span>
-      </footer>
-    </div>
+    <footer className='footer'>
+      <span style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.8)' }}>
+        {new Date().getFullYear()} © Vitaly Kolesnikov
+      </span>
+    </footer>
   )
 }
