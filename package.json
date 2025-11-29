@@ -13,30 +13,22 @@
     "axios": "^1.4.0",
     "bootstrap": "^4.6.0",
     "cleave.js": "^1.6.0",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.0.3",
-    "formik": "^2.2.6",
     "moment": "^2.29.1",
-    "react": "^17.0.1",
-    "react-autosuggest": "^10.1.0",
-    "react-autosuggestions": "^3.1.0",
+    "prop-types": "^15.8.1",
+    "react": "^18.2.0",
     "react-bootstrap": "^1.4.3",
     "react-bootstrap-typeahead": "^5.1.4",
-    "react-bootstrap-validation": "^0.1.11",
-    "react-components-form": "^4.0.0",
     "react-datepicker": "^4.11.0",
-    "react-dom": "^17.0.1",
+    "react-dom": "^18.2.0",
     "react-icons": "^4.2.0",
     "react-loader-spinner": "^5.3.4",
     "react-number-format": "^5.1.4",
     "react-promise-tracker": "^2.1.0",
-    "react-router-dom": "^5.2.0",
+    "react-router-dom": "^6.30.2",
     "react-scripts": "5.0.1",
-    "react-text-mask": "^5.4.3",
-    "react-validation": "^3.0.7",
-    "text-mask-addons": "^3.8.0",
-    "validator": "^13.5.2",
-    "web-vitals": "^3.3.1",
-    "yup": "^1.1.1"
+    "web-vitals": "^3.3.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -63,5 +55,14 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {}
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!(date-fns)/)"
+    ]
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0"
+  }
 }

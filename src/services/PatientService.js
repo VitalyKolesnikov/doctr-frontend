@@ -1,7 +1,9 @@
 import axios from 'axios'
 import authHeader from './auth-header'
+import API_CONFIG from '../config/api'
 
-const PATIENTS_REST_ENDPOINT = '/api/v1/patients/'
+const PATIENTS_REST_ENDPOINT =
+  API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.PATIENTS
 
 class PatientService {
   getAll() {

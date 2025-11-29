@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import PatientService from '../../services/PatientService'
 import makeInitials from '../../utils/makeInitials'
@@ -8,36 +8,51 @@ import { AsyncTypeahead } from 'react-bootstrap-typeahead'
 import 'react-bootstrap-typeahead/css/Typeahead.css'
 import buildPatientOption from '../../utils/buildPatientOption'
 import { trackPromise } from 'react-promise-tracker'
+import { useErrorHandler } from '../../hooks/useErrorHandler'
+import { ROUTES } from '../../constants'
 
 // icons
 import { BsPersonPlusFill } from 'react-icons/bs'
 
 export default function PatientList() {
-  const history = useHistory()
+  const navigate = useNavigate()
   const [patients, setPatients] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [options, setOptions] = useState([])
+  const { error, handleError, clearError } = useErrorHandler()
 
   const handleSearch = (query) => {
     setIsLoading(true)
-    PatientService.getSuggested(query).then((resp) => {
-      const options = resp.data.map((i) => ({
-        id: i.id,
-        lastName: i.lastName,
-        firstName: i.firstName,
-        middleName: i.middleName,
-      }))
-      setOptions(options)
-      setIsLoading(false)
-    })
+    clearError()
+    PatientService.getSuggested(query)
+      .then((resp) => {
+        const options = resp.data.map((i) => ({
+          id: i.id,
+          lastName: i.lastName,
+          firstName: i.firstName,
+          middleName: i.middleName,
+        }))
+        setOptions(options)
+        setIsLoading(false)
+      })
+      .catch((err) => {
+        handleError(err)
+        setIsLoading(false)
+      })
   }
 
   useEffect(() => {
+    clearError()
     trackPromise(
-      PatientService.getAll().then((resp) => {
-        setPatients(resp.data)
-      })
+      PatientService.getAll()
+        .then((resp) => {
+          setPatients(resp.data)
+        })
+        .catch((err) => {
+          handleError(err)
+        })
     )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -45,7 +60,7 @@ export default function PatientList() {
       <div className='container'>
         <div className='row'>
           <h2 style={{ paddingTop: 6 }}>Patients</h2>
-          <Link className='nav-link' to='/add-update-patient/_add'>
+          <Link className='nav-link' to={`/add-update-patient/${ROUTES.ADD_PATIENT}`}>
             <button className='btn btn-primary'>
               <BsPersonPlusFill size='1.3em' />
             </button>
@@ -61,7 +76,7 @@ export default function PatientList() {
                 id='patientSelect'
                 name='patient'
                 minLength={2}
-                onChange={(e) => history.push('/patients/' + e[0].id)}
+                onChange={(e) => navigate('/patients/' + e[0].id)}
                 isLoading={isLoading}
                 labelKey={(opt) =>
                   buildPatientOption(
@@ -81,6 +96,9 @@ export default function PatientList() {
         </div>
       </div>
 
+      {error && (
+        <div className='row alert alert-danger'>{error}</div>
+      )}
       <div className='row'>
         <table className='table table-striped table-bordered table-sm'>
           <thead>

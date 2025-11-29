@@ -1,70 +1,124 @@
-# Getting Started with Create React App
+# DoctR Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React-based frontend application for managing patients, visits, clinics, and reminders in a dental practice management system.
+
+## Features
+
+- **Patient Management**: Create, read, update, and delete patient records
+- **Visit Tracking**: Record and manage patient visits with clinic information
+- **Reminder System**: Set up and track reminders for patients
+- **Clinic Management**: Manage multiple clinic locations
+- **Authentication**: Secure login system with JWT tokens
+- **Responsive UI**: Built with React Bootstrap for mobile-friendly interface
+
+## Tech Stack
+
+- **React 18.2.0** - UI library
+- **React Router DOM 5.2.0** - Routing
+- **React Bootstrap 1.4.3** - UI components
+- **Axios 1.4.0** - HTTP client
+- **Moment.js 2.29.1** - Date manipulation
+- **React DatePicker** - Date selection component
+- **React Number Format** - Number formatting
+- **React Promise Tracker** - Loading state management
+
+## Prerequisites
+
+- Node.js 16.x or higher
+- Yarn or npm package manager
+- Backend API running on `http://localhost:8080` (or configure proxy in `package.json`)
+
+## Installation
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd doctr-frontend
+```
+
+2. Install dependencies:
+```bash
+yarn install
+# or
+npm install
+```
 
 ## Available Scripts
 
-In the project directory, you can run:
+### `yarn start` or `npm start`
 
-### `npm start`
+Runs the app in development mode at [http://localhost:3000](http://localhost:3000).
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The page will reload automatically when you make edits. You'll also see any lint errors in the console.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### `yarn test` or `npm test`
 
-### `npm test`
+Launches the test runner in interactive watch mode.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### `yarn build` or `npm run build`
 
-### `npm run build`
+Builds the app for production to the `build` folder. The build is optimized and minified for best performance.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Project Structure
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```
+src/
+├── components/          # React components
+│   ├── auth/           # Authentication components
+│   ├── clinics/        # Clinic management
+│   ├── common/         # Shared components
+│   ├── patients/       # Patient management
+│   ├── reminders/      # Reminder system
+│   └── visits/         # Visit tracking
+├── config/             # Configuration files
+│   └── api.js          # API endpoints configuration
+├── services/           # API service layer
+│   ├── AuthService.js
+│   ├── PatientService.js
+│   ├── VisitService.js
+│   ├── ReminderService.js
+│   ├── ClinicService.js
+│   └── axios-config.js # Axios interceptors
+└── utils/              # Utility functions
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Configuration
 
-### `npm run eject`
+### API Configuration
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+API endpoints are centralized in `src/config/api.js`. Update the `BASE_URL` if your backend runs on a different port or domain.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Environment Variables
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Create a `.env` file in the root directory for environment-specific configuration:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```
+REACT_APP_API_URL=http://localhost:8080
+```
 
-## Learn More
+## Authentication
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The app uses JWT tokens stored in localStorage. Tokens are automatically included in API requests via axios interceptors.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Development Guidelines
 
-### Code Splitting
+- Use functional components with hooks
+- Follow React best practices
+- Add PropTypes for component props
+- Use centralized API configuration
+- Handle errors gracefully with axios interceptors
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Recent Improvements
 
-### Analyzing the Bundle Size
+- ✅ Updated to React 18 with createRoot API
+- ✅ Centralized API configuration
+- ✅ Added PropTypes validation
+- ✅ Improved error handling with axios interceptors
+- ✅ Replaced window.confirm with modal dialogs
+- ✅ Fixed useEffect dependencies
+- ✅ Removed unused dependencies
+- ✅ Improved code quality and security
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## License
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Private project - All rights reserved

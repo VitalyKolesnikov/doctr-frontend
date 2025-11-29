@@ -1,19 +1,33 @@
-import React, { useContext } from 'react'
-import { Route, Redirect } from 'react-router-dom'
+import React, { useContext, useEffect, useCallback } from 'react'
+import { Navigate } from 'react-router-dom'
 import AuthService from '../../services/AuthService'
 import { ReminderContext } from '../ReminderContext'
 import ReminderService from '../../services/ReminderService'
 
-export const AuthenticatedRoute = (props) => {
+export const AuthenticatedRoute = ({ children }) => {
   const [count, setCount] = useContext(ReminderContext)
 
-  ReminderService.getActiveCount().then((resp) => {
-    setCount(resp.data)
-  })
+  const updateReminderCount = useCallback(() => {
+    ReminderService.getActiveCount()
+      .then((resp) => {
+        if (resp && resp.data !== undefined) {
+          setCount(resp.data)
+        }
+      })
+      .catch(() => {
+        setCount(0)
+      })
+  }, [setCount])
+
+  useEffect(() => {
+    if (AuthService.isUserLoggedIn()) {
+      updateReminderCount()
+    }
+  }, [updateReminderCount])
 
   if (AuthService.isUserLoggedIn()) {
-    return <Route {...props} />
+    return <>{children}</>
   } else {
-    return <Redirect to='/login' />
+    return <Navigate to='/login' replace />
   }
 }

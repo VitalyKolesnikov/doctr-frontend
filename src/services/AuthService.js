@@ -1,13 +1,15 @@
 import axios from 'axios'
-
-const API_URL = '/api/v1/auth/login'
+import API_CONFIG from '../config/api'
 
 class AuthService {
   async login(username, password) {
-    const resp = await axios.post(API_URL, {
-      username,
-      password,
-    })
+    const resp = await axios.post(
+      API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.AUTH.LOGIN,
+      {
+        username,
+        password,
+      }
+    )
     if (resp.data.token) {
       localStorage.setItem('user', JSON.stringify(resp.data))
     }
@@ -20,15 +22,29 @@ class AuthService {
   }
 
   register(username, email, password) {
-    return axios.post(API_URL + 'signup', {
-      username,
-      email,
-      password,
-    })
+    return axios.post(
+      API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.AUTH.SIGNUP,
+      {
+        username,
+        email,
+        password,
+      }
+    )
   }
 
   getCurrentUser() {
-    return JSON.parse(localStorage.getItem('user'))
+    const userStr = localStorage.getItem('user')
+    if (!userStr) {
+      return null
+    }
+
+    try {
+      return JSON.parse(userStr)
+    } catch (error) {
+      // If data is corrupted, clear localStorage
+      localStorage.removeItem('user')
+      return null
+    }
   }
 
   isUserLoggedIn() {

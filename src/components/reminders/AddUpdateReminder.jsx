@@ -1,98 +1,123 @@
 import { useState, useEffect, useContext } from 'react'
-import { useHistory, useParams, useLocation } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import ReminderService from '../../services/ReminderService'
 import Form from 'react-bootstrap/Form'
 import PatientService from '../../services/PatientService'
 import DatePicker, { registerLocale } from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import ru from 'date-fns/locale/ru'
-import moment from 'moment'
+import { parseDate, formatDate } from '../../utils/dateUtils'
 import buildPatientOption from '../../utils/buildPatientOption'
 import { ReminderContext } from '../ReminderContext'
 import { trackPromise } from 'react-promise-tracker'
+import { useErrorHandler } from '../../hooks/useErrorHandler'
+import { ROUTES } from '../../constants'
+
+registerLocale('ru', { ...ru, options: { ...ru.options, weekStartsOn: 1 } })
 
 export default function AddUpdateReminder() {
-  function useQuery() {
-    return new URLSearchParams(useLocation().search)
-  }
-
-  registerLocale('ru', { ...ru, options: { ...ru.options, weekStartsOn: 1 } })
-
-  const history = useHistory()
+  const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
   const params = useParams()
-  const query = useQuery()
+  const { error, handleError, clearError } = useErrorHandler()
 
   const [reminderId] = useState(params.id)
   const [count, setCount] = useContext(ReminderContext)
-  const [patientId, setPatientId] = useState(query.get('patientId'))
+  const [patientId, setPatientId] = useState(searchParams.get('patientId'))
   const [patientInfo, setPatientInfo] = useState('')
   const [date, setDate] = useState(new Date())
   const [text, setText] = useState('')
 
   useEffect(() => {
-    if (reminderId === '_add') {
-      trackPromise(
-        PatientService.getById(patientId).then((res) => {
-          let patient = res.data
-          setPatientInfo(
-            buildPatientOption(
-              patient.lastName,
-              patient.firstName,
-              patient.middleName
-            )
-          )
-        })
-      )
+    clearError()
+    if (reminderId === ROUTES.ADD_REMINDER) {
+      if (patientId) {
+        trackPromise(
+          PatientService.getById(patientId)
+            .then((res) => {
+              let patient = res.data
+              setPatientInfo(
+                buildPatientOption(
+                  patient.lastName,
+                  patient.firstName,
+                  patient.middleName
+                )
+              )
+            })
+            .catch((err) => {
+              handleError(err)
+            })
+        )
+      }
     } else {
       trackPromise(
-        ReminderService.getById(reminderId).then((res) => {
-          let reminder = res.data
-          setPatientId(reminder.patient.id)
-          setPatientInfo(
-            buildPatientOption(
-              reminder.patient.lastName,
-              reminder.patient.firstName,
-              reminder.patient.middleName
+        ReminderService.getById(reminderId)
+          .then((res) => {
+            let reminder = res.data
+            setPatientId(reminder.patient.id)
+            setPatientInfo(
+              buildPatientOption(
+                reminder.patient.lastName,
+                reminder.patient.firstName,
+                reminder.patient.middleName
+              )
             )
-          )
-          setDate(moment(reminder.date, 'DD.MM.yyyy'))
-          setText(reminder.text)
-        })
+            const parsedDate = parseDate(reminder.date)
+            setDate(parsedDate || new Date())
+            setText(reminder.text)
+          })
+          .catch((err) => {
+            handleError(err)
+          })
       )
     }
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reminderId, patientId])
 
   const saveReminder = (e) => {
     e.preventDefault()
+    clearError()
+    
     let reminder = {
       patientId: patientId,
-      date: moment(date).format('DD.MM.yyyy'),
+      date: formatDate(date),
       text: text,
     }
-    console.log('reminder => ' + JSON.stringify(reminder))
 
-    if (reminderId === '_add') {
+    if (reminderId === ROUTES.ADD_REMINDER) {
       trackPromise(
-        ReminderService.add(reminder).then(() => {
-          ReminderService.getActiveCount().then((resp) => {
-            setCount(resp.data)
+        ReminderService.add(reminder)
+          .then(() => {
+            ReminderService.getActiveCount()
+              .then((resp) => {
+                setCount(resp.data)
+              })
+              .catch(() => {
+                setCount(0)
+              })
+            navigate(`/patients/${patientId}?show=rem`)
           })
-          history.push('/patients/' + patientId + '?show=rem')
-        })
+          .catch((err) => {
+            handleError(err)
+          })
       )
     } else {
       reminder.id = reminderId
       trackPromise(
-        ReminderService.update(reminder, reminderId).then((resp) => {
-          setCount(resp.data)
-          history.push('/patients/' + patientId + '?show=rem')
-        })
+        ReminderService.update(reminder, reminderId)
+          .then((resp) => {
+            setCount(resp.data)
+            navigate(`/patients/${patientId}?show=rem`)
+          })
+          .catch((err) => {
+            handleError(err)
+          })
       )
     }
   }
 
   const getTitle = () => {
-    if (reminderId === '_add') {
+    if (reminderId === ROUTES.ADD_REMINDER) {
       return <h3 className='text-center'>Add reminder</h3>
     } else {
       return <h3 className='text-center'>Edit reminder</h3>
@@ -100,7 +125,7 @@ export default function AddUpdateReminder() {
   }
 
   const cancel = () => {
-    history.goBack()
+    navigate(-1)
   }
 
   return (
@@ -112,6 +137,9 @@ export default function AddUpdateReminder() {
             <br></br>
             {getTitle()}
             <div className='card-body'>
+              {error && (
+                <div className='alert alert-danger'>{error}</div>
+              )}
               <Form onSubmit={saveReminder}>
                 <div className='form-group'>
                   <label>Patient:</label>
@@ -155,8 +183,9 @@ export default function AddUpdateReminder() {
                   Save
                 </button>
                 <button
+                  type='button'
                   className='btn btn-danger'
-                  onClick={cancel.bind(this)}
+                  onClick={cancel}
                   style={{ marginLeft: '10px' }}
                 >
                   Cancel

@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
-import { useHistory, useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router-dom'
 import VisitService from '../../services/VisitService'
 import Cost from '../Cost'
 import { Link } from 'react-router-dom'
 import '../../App.css'
 import { trackPromise } from 'react-promise-tracker'
+import ConfirmModal from '../common/ConfirmModal'
+import { useErrorHandler } from '../../hooks/useErrorHandler'
 
 // icons
 import { FaEdit } from 'react-icons/fa'
@@ -18,35 +20,50 @@ import { FiPercent } from 'react-icons/fi'
 import { ImInfo } from 'react-icons/im'
 
 export default function VisitCard() {
-  const history = useHistory()
+  const navigate = useNavigate()
   const params = useParams()
+  const { error, handleError, clearError } = useErrorHandler()
 
   const [visit, setVisit] = useState([])
   const [id] = useState(params.id)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
 
   useEffect(() => {
-    console.log('id: ' + id)
+    clearError()
     trackPromise(
-      VisitService.getById(id).then((resp) => {
-        console.log('data: ' + resp.data.date)
-        setVisit(resp.data)
-        console.log(visit)
-      })
+      VisitService.getById(id)
+        .then((resp) => {
+          setVisit(resp.data)
+        })
+        .catch((err) => {
+          handleError(err)
+        })
     )
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id])
 
   const editVisit = (id) => {
-    history.push({ pathname: `/add-update-visit/${id}` })
+    navigate(`/add-update-visit/${id}`)
   }
 
   const deleteVisit = (id) => {
-    VisitService.delete(id).then(() => {
-      history.goBack()
-    })
+    clearError()
+    trackPromise(
+      VisitService.delete(id)
+        .then(() => {
+          navigate(-1)
+        })
+        .catch((err) => {
+          handleError(err)
+        })
+    )
   }
 
   return (
     <>
+      {error && (
+        <div className='alert alert-danger'>{error}</div>
+      )}
       {visit.patient && (
         <div>
           <div className='card'>
@@ -105,12 +122,12 @@ export default function VisitCard() {
 
                   <div>
                     <BiRuble className='card-info-icon' />
-                    <Cost value={visit.cost} /> руб.
+                    <Cost value={visit.cost} /> RUB
                   </div>
 
                   <div>
                     <FiPercent className='card-info-icon' />
-                    {visit.percent}% (<Cost value={visit.share} /> руб.)
+                    {visit.percent}% (<Cost value={visit.share} /> RUB)
                   </div>
                 </div>
                 <div className='col-2'>
@@ -125,11 +142,7 @@ export default function VisitCard() {
                   </div>
                   <div className='row'>
                     <button
-                      onClick={() => {
-                        if (window.confirm('Are you sure?')) {
-                          deleteVisit(visit.id)
-                        }
-                      }}
+                      onClick={() => setShowDeleteModal(true)}
                       className='btn btn-danger'
                       style={{ marginLeft: '35px' }}
                     >
@@ -148,6 +161,16 @@ export default function VisitCard() {
           </div>
         </div>
       )}
+
+      <ConfirmModal
+        show={showDeleteModal}
+        onConfirm={() => {
+          deleteVisit(visit.id)
+          setShowDeleteModal(false)
+        }}
+        onCancel={() => setShowDeleteModal(false)}
+        message='Are you sure?'
+      />
     </>
   )
 }
