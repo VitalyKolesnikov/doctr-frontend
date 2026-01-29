@@ -1,4 +1,4 @@
-import { useState, useEffect, Fragment } from 'react'
+import { useState, useEffect, Fragment, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Accordion, Card } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -7,11 +7,13 @@ import VisitService from '../../services/VisitService'
 import makeInitials from '../../utils/makeInitials'
 import { trackPromise } from 'react-promise-tracker'
 import { useErrorHandler } from '../../hooks/useErrorHandler'
+import { ThemeContext } from '../ThemeContext'
 
 export default function VisitList() {
   const navigate = useNavigate()
   const [visits, setVisits] = useState([])
   const { error, handleError, clearError } = useErrorHandler()
+  const [isDarkMode] = useContext(ThemeContext)
 
   useEffect(() => {
     clearError()
@@ -46,7 +48,7 @@ export default function VisitList() {
           <h2 style={{ margin: 0, fontWeight: 600 }}>Visits</h2>
           <span style={{
             fontSize: '0.875rem',
-            color: '#64748b',
+            color: 'var(--text-secondary)',
             fontWeight: 500
           }}>
             showing last 400
@@ -57,7 +59,7 @@ export default function VisitList() {
           <div className='card' style={{ 
             padding: '3rem',
             textAlign: 'center',
-            color: '#64748b'
+            color: 'var(--text-secondary)'
           }}>
             <p style={{ margin: 0, fontSize: '1.1rem' }}>No visits found</p>
           </div>
@@ -71,17 +73,17 @@ export default function VisitList() {
                     variant='link'
                     eventKey={idx + 1}
                     style={{
-                      backgroundColor: '#f8fafc',
-                      borderBottom: '1px solid #e2e8f0',
+                      backgroundColor: 'var(--bg-tertiary)',
+                      borderBottom: '1px solid var(--border-color)',
                       padding: '1rem 1.5rem',
                       cursor: 'pointer',
                       transition: 'background-color 0.2s',
                       borderRadius: '12px 12px 0 0'
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f1f5f9'}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#f8fafc'}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = isDarkMode ? 'var(--bg-secondary)' : '#f1f5f9'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-tertiary)'}
                   >
-                    <h5 style={{ margin: 0, fontWeight: 600, color: '#1e293b' }}>
+                    <h5 style={{ margin: 0, fontWeight: 600, color: 'var(--text-primary)' }}>
                       {visitsDto.date}
                     </h5>
                   </Accordion.Toggle>
@@ -96,17 +98,17 @@ export default function VisitList() {
                               style={{
                                 marginBottom: '1rem',
                                 padding: '1rem',
-                                backgroundColor: '#ffffff',
-                                border: '1px solid #e2e8f0',
+                                backgroundColor: 'var(--bg-primary)',
+                                border: '1px solid var(--border-color)',
                                 cursor: 'pointer',
                                 transition: 'background-color 0.2s, box-shadow 0.2s'
                               }}
                               onMouseEnter={(e) => {
-                                e.currentTarget.style.backgroundColor = '#f8fafc'
+                                e.currentTarget.style.backgroundColor = 'var(--bg-secondary)'
                                 e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'
                               }}
                               onMouseLeave={(e) => {
-                                e.currentTarget.style.backgroundColor = '#ffffff'
+                                e.currentTarget.style.backgroundColor = 'var(--bg-primary)'
                                 e.currentTarget.style.boxShadow = 'none'
                               }}
                             >
@@ -119,14 +121,14 @@ export default function VisitList() {
                                 <div>
                                   <div style={{
                                     fontSize: '0.875rem',
-                                    color: '#64748b',
+                                    color: 'var(--text-secondary)',
                                     marginBottom: '0.25rem'
                                   }}>
                                     Patient
                                   </div>
                                   <div style={{
                                     fontWeight: 500,
-                                    color: '#1e293b'
+                                    color: 'var(--text-primary)'
                                   }}>
                                     {visit.patient.lastName}{' '}
                                     {makeInitials(
@@ -138,24 +140,24 @@ export default function VisitList() {
                                 <div>
                                   <div style={{
                                     fontSize: '0.875rem',
-                                    color: '#64748b',
+                                    color: 'var(--text-secondary)',
                                     marginBottom: '0.25rem'
                                   }}>
                                     Clinic
                                   </div>
-                                  <div style={{ fontWeight: 500 }}>
+                                  <div style={{ fontWeight: 500, color: 'var(--text-primary)' }}>
                                     {visit.clinic.name}
                                   </div>
                                 </div>
                                 <div>
                                   <div style={{
                                     fontSize: '0.875rem',
-                                    color: '#64748b',
+                                    color: 'var(--text-secondary)',
                                     marginBottom: '0.25rem'
                                   }}>
                                     Cost
                                   </div>
-                                  <div style={{ fontWeight: 600, color: '#10b981' }}>
+                                  <div style={{ fontWeight: 600, color: 'var(--success-color)' }}>
                                     <Cost value={visit.cost} />
                                   </div>
                                 </div>
@@ -164,8 +166,8 @@ export default function VisitList() {
                                 <div style={{
                                   marginTop: '1rem',
                                   paddingTop: '1rem',
-                                  borderTop: '1px solid #e2e8f0',
-                                  color: '#475569',
+                                  borderTop: '1px solid var(--border-color)',
+                                  color: 'var(--text-secondary)',
                                   fontSize: '0.9rem'
                                 }}>
                                   {visit.info}
@@ -177,7 +179,7 @@ export default function VisitList() {
                       </div>
                       <div style={{
                         padding: '1rem',
-                        backgroundColor: '#f8fafc',
+                        backgroundColor: 'var(--bg-tertiary)',
                         borderRadius: '8px',
                         display: 'flex',
                         justifyContent: 'space-between',
@@ -185,13 +187,13 @@ export default function VisitList() {
                         flexWrap: 'wrap',
                         gap: '0.5rem'
                       }}>
-                        <span style={{ fontWeight: 600, color: '#1e293b' }}>Total:</span>
+                        <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>Total:</span>
                         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                          <span style={{ color: '#10b981', fontWeight: 600 }}>
+                          <span style={{ color: 'var(--success-color)', fontWeight: 600 }}>
                             <Cost value={visitsDto.totalSum} />
                           </span>
-                          <span style={{ color: '#64748b' }}>/</span>
-                          <span style={{ color: '#ef4444', fontWeight: 600 }}>
+                          <span style={{ color: 'var(--text-secondary)' }}>/</span>
+                          <span style={{ color: 'var(--danger-color)', fontWeight: 600 }}>
                             <Cost value={visitsDto.totalShare} /> RUB
                           </span>
                         </div>

@@ -15,6 +15,7 @@ import VisitCard from './components/visits/VisitCard'
 import Home from './components/Home'
 import AddUpdateReminder from './components/reminders/AddUpdateReminder'
 import { ReminderProvider } from './components/ReminderContext'
+import { ThemeProvider } from './components/ThemeContext'
 import ErrorBoundary from './components/common/ErrorBoundary'
 
 function AppContent() {
@@ -129,11 +130,13 @@ function AppContent() {
 function App() {
   return (
     <ErrorBoundary>
-      <ReminderProvider>
-        <BrowserRouter>
-          <AppContent />
-        </BrowserRouter>
-      </ReminderProvider>
+      <ThemeProvider>
+        <ReminderProvider>
+          <BrowserRouter>
+            <AppContent />
+          </BrowserRouter>
+        </ReminderProvider>
+      </ThemeProvider>
     </ErrorBoundary>
   )
 }

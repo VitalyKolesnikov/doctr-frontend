@@ -1,15 +1,17 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import VisitService from '../../services/VisitService'
 import Cost from '../Cost'
 import { trackPromise } from 'react-promise-tracker'
 import PropTypes from 'prop-types'
 import { useErrorHandler } from '../../hooks/useErrorHandler'
+import { ThemeContext } from '../ThemeContext'
 
 export default function VisitList({ patientId }) {
   const navigate = useNavigate()
   const [visits, setVisits] = useState([])
   const { error, handleError, clearError } = useErrorHandler()
+  const [isDarkMode] = useContext(ThemeContext)
 
   useEffect(() => {
     clearError()
@@ -40,7 +42,7 @@ export default function VisitList({ patientId }) {
             style={{ cursor: 'pointer' }}
             onClick={() => navigate('/visits/' + visit.id)}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#f8fafc'
+              e.currentTarget.style.backgroundColor = 'var(--bg-secondary)'
               e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'
             }}
             onMouseLeave={(e) => {

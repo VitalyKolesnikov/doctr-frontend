@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import PatientService from '../../services/PatientService'
 import { Link } from 'react-router-dom'
@@ -12,6 +12,7 @@ import { trackPromise } from 'react-promise-tracker'
 import ConfirmModal from '../common/ConfirmModal'
 import { useErrorHandler } from '../../hooks/useErrorHandler'
 import { ROUTES } from '../../constants'
+import { ThemeContext } from '../ThemeContext'
 
 // icons
 import { FaEdit } from 'react-icons/fa'
@@ -31,6 +32,7 @@ export default function PatientCard() {
   const navigate = useNavigate()
   const params = useParams()
   const { error, handleError, clearError } = useErrorHandler()
+  const [isDarkMode] = useContext(ThemeContext)
 
   const [patient, setPatient] = useState('')
   const [id] = useState(params.id)
@@ -99,7 +101,7 @@ export default function PatientCard() {
                 <h2 style={{ 
                   marginBottom: '0.5rem',
                   fontWeight: 600,
-                  color: '#1e293b',
+                  color: 'var(--text-primary)',
                   whiteSpace: 'nowrap',
                   fontSize: 'clamp(1.5rem, 4.8vw, 2.25rem)',
                   overflow: 'hidden',
@@ -110,7 +112,7 @@ export default function PatientCard() {
                 <h4 style={{ 
                   margin: 0,
                   fontWeight: 400,
-                  color: '#64748b'
+                  color: 'var(--text-secondary)'
                 }}>
                   {patient.firstName} {patient.middleName}
                 </h4>
@@ -154,7 +156,7 @@ export default function PatientCard() {
 
             <hr style={{ 
               border: 'none',
-              borderTop: '1px solid #e2e8f0',
+              borderTop: '1px solid var(--border-color)',
               margin: '1.5rem 0'
             }} />
 
@@ -173,12 +175,12 @@ export default function PatientCard() {
                   <div>
                     <div style={{ 
                       fontSize: '0.875rem',
-                      color: '#64748b',
+                      color: 'var(--text-secondary)',
                       marginBottom: '0.25rem'
                     }}>
                       Birth Date
                     </div>
-                    <div style={{ fontWeight: 500 }}>
+                    <div style={{ fontWeight: 500, color: 'var(--text-primary)' }}>
                       {patient.birthDate} ({calculateAge(patient.birthDate)} years)
                     </div>
                   </div>
@@ -195,7 +197,7 @@ export default function PatientCard() {
                   <div>
                     <div style={{ 
                       fontSize: '0.875rem',
-                      color: '#64748b',
+                      color: 'var(--text-secondary)',
                       marginBottom: '0.25rem'
                     }}>
                       Email
@@ -203,7 +205,7 @@ export default function PatientCard() {
                     <a 
                       href={'mailto:' + patient.email}
                       style={{
-                        color: '#2563eb',
+                        color: 'var(--primary-color)',
                         textDecoration: 'none',
                         fontWeight: 500
                       }}
@@ -224,7 +226,7 @@ export default function PatientCard() {
                   <div>
                     <div style={{ 
                       fontSize: '0.875rem',
-                      color: '#64748b',
+                      color: 'var(--text-secondary)',
                       marginBottom: '0.25rem'
                     }}>
                       Phone
@@ -232,7 +234,7 @@ export default function PatientCard() {
                     <a 
                       href={'tel:' + patient.phone}
                       style={{
-                        color: '#2563eb',
+                        color: 'var(--primary-color)',
                         textDecoration: 'none',
                         fontWeight: 500
                       }}
@@ -254,12 +256,12 @@ export default function PatientCard() {
                   <div>
                     <div style={{ 
                       fontSize: '0.875rem',
-                      color: '#64748b',
+                      color: 'var(--text-secondary)',
                       marginBottom: '0.25rem'
                     }}>
                       Additional Info
                     </div>
-                    <div style={{ fontWeight: 500 }}>
+                    <div style={{ fontWeight: 500, color: 'var(--text-primary)' }}>
                       {patient.info}
                     </div>
                   </div>

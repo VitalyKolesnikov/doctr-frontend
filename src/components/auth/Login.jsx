@@ -1,10 +1,12 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AuthService from '../../services/AuthService.js'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { trackPromise } from 'react-promise-tracker'
 import { useErrorHandler } from '../../hooks/useErrorHandler'
+import { ThemeContext } from '../ThemeContext'
+import { BsSun, BsMoon } from 'react-icons/bs'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -16,6 +18,7 @@ export default function Login() {
   const formRef = useRef(null)
   const autoSubmitTimeoutRef = useRef(null)
   const isAutoSubmittingRef = useRef(false)
+  const [isDarkMode, toggleTheme] = useContext(ThemeContext)
 
   useEffect(() => {
     if (AuthService.isUserLoggedIn()) {
@@ -117,8 +120,37 @@ export default function Login() {
       alignItems: 'center',
       justifyContent: 'center',
       padding: '2rem 1rem',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+      background: isDarkMode 
+        ? 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)' 
+        : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      position: 'relative'
     }}>
+      <button
+        onClick={toggleTheme}
+        style={{
+          position: 'fixed',
+          top: '1rem',
+          right: '1rem',
+          background: 'rgba(255, 255, 255, 0.2)',
+          border: 'none',
+          borderRadius: '50%',
+          width: '48px',
+          height: '48px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          color: '#ffffff',
+          fontSize: '1.5rem',
+          zIndex: 1000,
+          transition: 'background-color 0.2s',
+          backdropFilter: 'blur(10px)'
+        }}
+        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.3)'}
+        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)'}
+      >
+        {isDarkMode ? <BsSun /> : <BsMoon />}
+      </button>
       <div className='card' style={{
         maxWidth: '450px',
         width: '100%',
@@ -128,12 +160,12 @@ export default function Login() {
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <h2 style={{ 
             fontWeight: 600,
-            color: '#1e293b',
+            color: 'var(--text-primary)',
             marginBottom: '0.5rem'
           }}>
             Welcome to DoctR
           </h2>
-          <p style={{ color: '#64748b', margin: 0 }}>
+          <p style={{ color: 'var(--text-secondary)', margin: 0 }}>
             Sign in to continue
           </p>
         </div>
@@ -143,7 +175,7 @@ export default function Login() {
             <Form.Label style={{ 
               fontWeight: 500,
               marginBottom: '0.5rem',
-              color: '#1e293b'
+              color: 'var(--text-primary)'
             }}>
               Username
             </Form.Label>
@@ -176,7 +208,7 @@ export default function Login() {
             <Form.Label style={{ 
               fontWeight: 500,
               marginBottom: '0.5rem',
-              color: '#1e293b'
+              color: 'var(--text-primary)'
             }}>
               Password
             </Form.Label>

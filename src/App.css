@@ -3,6 +3,15 @@
   display: flex;
   flex-direction: column;
   padding-bottom: 60px; /* Отступ для фиксированного footer */
+  background-color: var(--bg-secondary);
+}
+
+body.dark-theme .App {
+  background-color: var(--bg-secondary);
+}
+
+body.dark-theme main {
+  background-color: var(--bg-secondary);
 }
 
 /* Header fixed styling */
@@ -113,6 +122,43 @@ header .navbar-collapse.show {
   overflow: hidden;
 }
 
+body.dark-theme .card {
+  background-color: var(--bg-primary) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary);
+}
+
+body.dark-theme .patient-search-card {
+  background-color: var(--bg-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+body.dark-theme .patient-search-card input {
+  background-color: var(--bg-primary) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+body.dark-theme .patient-search-card input::placeholder {
+  color: var(--text-muted) !important;
+}
+
+body.dark-theme .patient-search-card label {
+  color: var(--text-primary) !important;
+}
+
+body.dark-theme .patient-search-card .form-control {
+  background-color: var(--bg-primary) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+body.dark-theme .patient-search-card .form-control:focus {
+  background-color: var(--bg-primary) !important;
+  border-color: var(--primary-color) !important;
+  color: var(--text-primary) !important;
+}
+
 /* Typeahead dropdown fixes */
 .rbt-menu {
   z-index: 9999 !important;
@@ -120,10 +166,15 @@ header .navbar-collapse.show {
   overflow-y: auto !important;
   position: absolute !important;
   width: 100% !important;
-  background-color: white !important;
-  border: 1px solid #e2e8f0 !important;
+  background-color: var(--bg-primary) !important;
+  border: 1px solid var(--border-color) !important;
   border-radius: 8px !important;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+body.dark-theme .rbt-menu {
+  background-color: var(--bg-primary) !important;
+  border-color: var(--border-color) !important;
 }
 
 .rbt-menu.dropdown-menu {
@@ -155,6 +206,11 @@ header .navbar-collapse.show {
   .patient-search-card {
     overflow: visible !important;
   }
+
+body.dark-theme .patient-search-card {
+  background-color: var(--bg-primary) !important;
+  border-color: var(--border-color) !important;
+}
   
   .card[style*="overflow: visible"],
   .card[style*="overflow:visible"] {
@@ -199,6 +255,10 @@ header .navbar-collapse.show {
   vertical-align: middle;
 }
 
+body.dark-theme .card-info-icon {
+  color: var(--success-color);
+}
+
 .header-icon {
   font-size: 1.4rem;
   margin-right: var(--spacing-lg);
@@ -229,6 +289,14 @@ header .navbar-collapse.show {
 
 .text-grey {
   color: var(--text-muted);
+}
+
+body.dark-theme .text-grey {
+  color: var(--text-primary) !important;
+}
+
+body.dark-theme .text-grey * {
+  color: var(--text-primary) !important;
 }
 
 /* Buttons */
@@ -306,6 +374,36 @@ header .navbar-collapse.show {
   background-color: var(--bg-tertiary);
 }
 
+body.dark-theme .table {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+body.dark-theme .table thead {
+  background-color: var(--bg-tertiary);
+}
+
+body.dark-theme .table tbody tr:hover {
+  background-color: var(--bg-tertiary);
+}
+
+body.dark-theme .table-striped tbody tr:nth-of-type(odd) {
+  background-color: var(--bg-secondary);
+}
+
+body.dark-theme .table-striped tbody tr:nth-of-type(even) {
+  background-color: var(--bg-primary);
+}
+
+body.dark-theme .table-bordered {
+  border-color: var(--border-color);
+}
+
+body.dark-theme .table-bordered td,
+body.dark-theme .table-bordered th {
+  border-color: var(--border-color);
+}
+
 .table thead th {
   border-bottom: 2px solid var(--border-color);
   font-weight: 600;
@@ -343,6 +441,11 @@ header .navbar-collapse.show {
   background-color: #fee2e2;
   color: #991b1b;
   border-left: 4px solid var(--danger-color);
+}
+
+body.dark-theme .alert-danger {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
 }
 
 /* Forms */
@@ -424,9 +527,50 @@ header .navbar-collapse.show {
 }
 
 .nav-tabs .nav-link.active {
+  color: var(--text-light);
+  border-bottom: none;
+  background-color: var(--primary-color);
+  border-radius: var(--border-radius-sm) var(--border-radius-sm) 0 0;
+}
+
+body.dark-theme .nav-tabs .nav-link {
+  color: var(--text-primary);
+  border-bottom-color: transparent;
+}
+
+body.dark-theme .nav-tabs .nav-item .nav-link {
+  color: var(--text-primary);
+}
+
+body.dark-theme .nav-tabs a.nav-link {
+  color: var(--text-primary);
+}
+
+body.dark-theme .nav-tabs .nav-link:hover {
   color: var(--primary-color);
   border-bottom-color: var(--primary-color);
   background-color: transparent;
+}
+
+body.dark-theme .nav-tabs .nav-link.active {
+  color: var(--text-light) !important;
+  border-bottom: none !important;
+  background-color: var(--primary-color) !important;
+  border-radius: var(--border-radius-sm) var(--border-radius-sm) 0 0 !important;
+}
+
+body.dark-theme .nav-tabs .nav-item .nav-link.active {
+  color: var(--text-light) !important;
+  border-bottom: none !important;
+  background-color: var(--primary-color) !important;
+  border-radius: var(--border-radius-sm) var(--border-radius-sm) 0 0 !important;
+}
+
+body.dark-theme .nav-tabs a.nav-link.active {
+  color: var(--text-light) !important;
+  border-bottom: none !important;
+  background-color: var(--primary-color) !important;
+  border-radius: var(--border-radius-sm) var(--border-radius-sm) 0 0 !important;
 }
 
 /* Accordion */
@@ -567,6 +711,26 @@ header .navbar-collapse.show {
 .modal-backdrop {
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(2px);
+}
+
+body.dark-theme .modal-content {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+body.dark-theme .modal-header {
+  background-color: var(--bg-primary);
+  border-bottom-color: var(--border-color);
+}
+
+body.dark-theme .modal-body {
+  background-color: var(--bg-primary);
+  color: var(--text-secondary);
+}
+
+body.dark-theme .modal-footer {
+  background-color: var(--bg-secondary);
+  border-top-color: var(--border-color);
 }
 
 .btn-secondary {

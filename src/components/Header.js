@@ -5,6 +5,7 @@ import { Navbar, Nav, NavItem } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import '../App.css'
 import { ReminderContext } from './ReminderContext'
+import { ThemeContext } from './ThemeContext'
 
 // icons
 import { FaSignOutAlt } from 'react-icons/fa'
@@ -12,10 +13,12 @@ import { FaTooth } from 'react-icons/fa'
 import { BsBell } from 'react-icons/bs'
 import { BsPersonFill } from 'react-icons/bs'
 import { CgFileDocument } from 'react-icons/cg'
+import { BsSun, BsMoon } from 'react-icons/bs'
 
 export default function Header() {
   const isUserLoggedIn = AuthService.isUserLoggedIn()
   const [count, setCount] = useContext(ReminderContext)
+  const [isDarkMode, toggleTheme] = useContext(ThemeContext)
 
   return (
     <header style={{ 
@@ -96,6 +99,28 @@ export default function Header() {
 
         {isUserLoggedIn && (
           <Nav className='ml-auto' style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <NavItem>
+              <Nav.Link 
+                onClick={toggleTheme}
+                style={{
+                  color: '#ffffff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '0.25rem 0.75rem',
+                  borderRadius: '8px',
+                  transition: 'background-color 0.2s',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+              >
+                {isDarkMode ? (
+                  <BsSun style={{ fontSize: '2rem' }} />
+                ) : (
+                  <BsMoon style={{ fontSize: '2rem' }} />
+                )}
+              </Nav.Link>
+            </NavItem>
 
             <NavItem>
               <Nav.Link 

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import makeInitials from '../../utils/makeInitials'
 import ReminderService from '../../services/ReminderService'
 import { ReminderContext } from '../ReminderContext'
+import { ThemeContext } from '../ThemeContext'
 import { trackPromise } from 'react-promise-tracker'
 import ConfirmModal from '../common/ConfirmModal'
 
@@ -14,6 +15,7 @@ import { FaRegCheckSquare } from 'react-icons/fa'
 
 export default function ReminderList() {
   const [count, setCount] = useContext(ReminderContext)
+  const [isDarkMode] = useContext(ThemeContext)
   const [reminders, setReminders] = useState([])
   const [showCompleteModal, setShowCompleteModal] = useState(false)
   const [reminderToComplete, setReminderToComplete] = useState(null)
@@ -54,7 +56,7 @@ export default function ReminderList() {
           <div className='card' style={{
             padding: '3rem',
             textAlign: 'center',
-            color: '#64748b'
+            color: 'var(--text-secondary)'
           }}>
             <p style={{ margin: 0, fontSize: '1.1rem' }}>No active reminders</p>
           </div>
@@ -99,7 +101,7 @@ export default function ReminderList() {
                       <Link
                         to={'/patients/' + reminder.patient.id + '?show=rem'}
                         style={{
-                          color: '#2563eb',
+                          color: 'var(--primary-color)',
                           fontWeight: 600,
                           textDecoration: 'none'
                         }}
@@ -117,7 +119,7 @@ export default function ReminderList() {
                       alignItems: 'center',
                       gap: '0.5rem',
                       marginBottom: '0.75rem',
-                      color: '#475569'
+                      color: 'var(--text-primary)'
                     }}>
                       <BiCalendar className='card-info-icon' />
                       <span style={{ fontWeight: 500 }}>{reminder.date}</span>
@@ -128,7 +130,7 @@ export default function ReminderList() {
                         display: 'flex',
                         alignItems: 'flex-start',
                         gap: '0.5rem',
-                        color: '#475569',
+                        color: 'var(--text-primary)',
                         marginTop: '0.75rem'
                       }}>
                         <ImInfo className='card-info-icon' style={{ marginTop: '0.25rem' }} />
@@ -154,12 +156,12 @@ export default function ReminderList() {
                       justifyContent: 'center',
                       marginLeft: '1rem'
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f1f5f9'}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = isDarkMode ? 'var(--bg-tertiary)' : '#f1f5f9'}
                     onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                   >
                     <FaRegCheckSquare
                       style={{
-                        color: '#10b981',
+                        color: 'var(--success-color)',
                         fontSize: '1.75rem',
                         transition: 'transform 0.2s'
                       }}

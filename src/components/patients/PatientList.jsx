@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import PatientService from '../../services/PatientService'
@@ -10,6 +10,7 @@ import buildPatientOption from '../../utils/buildPatientOption'
 import { trackPromise } from 'react-promise-tracker'
 import { useErrorHandler } from '../../hooks/useErrorHandler'
 import { ROUTES } from '../../constants'
+import { ThemeContext } from '../ThemeContext'
 
 // icons
 import { BsPersonPlusFill } from 'react-icons/bs'
@@ -21,6 +22,7 @@ export default function PatientList() {
   const [options, setOptions] = useState([])
   const { error, handleError, clearError } = useErrorHandler()
   const [isMobile, setIsMobile] = useState(false)
+  const [isDarkMode] = useContext(ThemeContext)
 
   useEffect(() => {
     const checkMobile = () => {
@@ -111,7 +113,9 @@ export default function PatientList() {
           flexShrink: 0,
           overflow: 'visible',
           position: 'relative',
-          zIndex: 100
+          zIndex: 100,
+          backgroundColor: 'var(--bg-primary)',
+          borderColor: 'var(--border-color)'
         }}>
           <Form>
             <div className='form-group' style={{ margin: 0, position: 'relative' }}>
@@ -119,7 +123,7 @@ export default function PatientList() {
                 fontWeight: 500,
                 marginBottom: '0.5rem',
                 display: 'block',
-                color: '#1e293b'
+                color: 'var(--text-primary)'
               }}>
                 Search Patients
               </label>
@@ -147,7 +151,7 @@ export default function PatientList() {
                     required: true,
                     style: {
                       borderRadius: '8px',
-                      border: '1px solid #e2e8f0',
+                      border: '1px solid var(--border-color)',
                       padding: '0.75rem 1rem'
                     }
                   }}
@@ -186,16 +190,16 @@ export default function PatientList() {
                   <th style={{ 
                     padding: '1rem',
                     fontWeight: 600,
-                    backgroundColor: '#f8fafc',
-                    borderBottom: '2px solid #e2e8f0'
+                    backgroundColor: 'var(--bg-tertiary)',
+                    borderBottom: '2px solid var(--border-color)'
                   }}>
                     Name
                   </th>
                   <th style={{ 
                     padding: '1rem',
                     fontWeight: 600,
-                    backgroundColor: '#f8fafc',
-                    borderBottom: '2px solid #e2e8f0'
+                    backgroundColor: 'var(--bg-tertiary)',
+                    borderBottom: '2px solid var(--border-color)'
                   }}>
                     Birth Date
                   </th>
@@ -208,7 +212,7 @@ export default function PatientList() {
                     <td colSpan='2' style={{ 
                       padding: '2rem',
                       textAlign: 'center',
-                      color: '#64748b'
+                      color: 'var(--text-secondary)'
                     }}>
                       No patients found
                     </td>
@@ -221,14 +225,14 @@ export default function PatientList() {
                         transition: 'background-color 0.2s',
                         cursor: 'pointer'
                       }}
-                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f8fafc'}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-secondary)'}
                       onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                     >
                       <td style={{ padding: '1rem' }}>
                         <Link 
                           to={'/patients/' + patient.id}
                           style={{
-                            color: '#2563eb',
+                            color: 'var(--primary-color)',
                             fontWeight: 500,
                             textDecoration: 'none'
                           }}
@@ -239,7 +243,7 @@ export default function PatientList() {
                           {makeInitials(patient.firstName, patient.middleName)}
                         </Link>
                       </td>
-                      <td style={{ padding: '1rem', color: '#475569' }}>
+                      <td style={{ padding: '1rem', color: 'var(--text-secondary)' }}>
                         {patient.birthDate}
                       </td>
                     </tr>

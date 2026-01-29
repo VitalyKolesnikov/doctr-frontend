@@ -68,6 +68,7 @@ export default function PatientCardReminderList({ patientId }) {
                 'col-8 col-lg-4' +
                 (reminder.status === 'NOT_ACTIVE' ? ' text-grey' : '')
               }
+              style={{ color: 'var(--text-primary)' }}
             >
               <div>
                 <BiCalendar className='card-info-icon' />

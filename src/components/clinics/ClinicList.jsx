@@ -1,11 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 import ClinicService from '../../services/ClinicService'
 import { useErrorHandler } from '../../hooks/useErrorHandler'
+import { ThemeContext } from '../ThemeContext'
 
 export default function ClinicListComponent() {
   const [clinics, setClinics] = useState([])
   const { error, handleError, clearError } = useErrorHandler()
+  const [isDarkMode] = useContext(ThemeContext)
 
   useEffect(() => {
     clearError()
@@ -46,24 +48,24 @@ export default function ClinicListComponent() {
                   <th style={{
                     padding: '1rem',
                     fontWeight: 600,
-                    backgroundColor: '#f8fafc',
-                    borderBottom: '2px solid #e2e8f0'
+                    backgroundColor: 'var(--bg-tertiary)',
+                    borderBottom: '2px solid var(--border-color)'
                   }}>
                     Name
                   </th>
                   <th style={{
                     padding: '1rem',
                     fontWeight: 600,
-                    backgroundColor: '#f8fafc',
-                    borderBottom: '2px solid #e2e8f0'
+                    backgroundColor: 'var(--bg-tertiary)',
+                    borderBottom: '2px solid var(--border-color)'
                   }}>
                     Phone
                   </th>
                   <th style={{
                     padding: '1rem',
                     fontWeight: 600,
-                    backgroundColor: '#f8fafc',
-                    borderBottom: '2px solid #e2e8f0'
+                    backgroundColor: 'var(--bg-tertiary)',
+                    borderBottom: '2px solid var(--border-color)'
                   }}>
                     Address
                   </th>
@@ -76,7 +78,7 @@ export default function ClinicListComponent() {
                     <td colSpan='3' style={{
                       padding: '2rem',
                       textAlign: 'center',
-                      color: '#64748b'
+                      color: 'var(--text-secondary)'
                     }}>
                       No clinics found
                     </td>
@@ -88,16 +90,16 @@ export default function ClinicListComponent() {
                       style={{
                         transition: 'background-color 0.2s'
                       }}
-                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f8fafc'}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-secondary)'}
                       onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                     >
-                      <td style={{ padding: '1rem', fontWeight: 500 }}>
+                      <td style={{ padding: '1rem', fontWeight: 500, color: 'var(--text-primary)' }}>
                         {clinic.name}
                       </td>
-                      <td style={{ padding: '1rem', color: '#475569' }}>
+                      <td style={{ padding: '1rem', color: 'var(--text-secondary)' }}>
                         {clinic.phone}
                       </td>
-                      <td style={{ padding: '1rem', color: '#475569' }}>
+                      <td style={{ padding: '1rem', color: 'var(--text-secondary)' }}>
                         {clinic.address}
                       </td>
                     </tr>
