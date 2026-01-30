@@ -194,7 +194,10 @@ export default function Login() {
               style={{
                 padding: '0.75rem 1rem',
                 fontSize: '1rem',
-                borderRadius: '8px'
+                borderRadius: '8px',
+                backgroundColor: isDarkMode ? 'var(--bg-primary)' : undefined,
+                color: isDarkMode ? 'var(--text-primary)' : undefined,
+                borderColor: isDarkMode ? 'var(--border-color)' : undefined
               }}
             />
             {validationErrors.username && (
@@ -227,7 +230,10 @@ export default function Login() {
               style={{
                 padding: '0.75rem 1rem',
                 fontSize: '1rem',
-                borderRadius: '8px'
+                borderRadius: '8px',
+                backgroundColor: isDarkMode ? 'var(--bg-primary)' : undefined,
+                color: isDarkMode ? 'var(--text-primary)' : undefined,
+                borderColor: isDarkMode ? 'var(--border-color)' : undefined
               }}
             />
             {validationErrors.password && (
