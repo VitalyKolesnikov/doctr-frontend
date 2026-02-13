@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import VisitService from '../../services/VisitService'
 import Form from 'react-bootstrap/Form'
@@ -13,6 +13,8 @@ import { NumericFormat } from 'react-number-format'
 import { trackPromise } from 'react-promise-tracker'
 import { useErrorHandler } from '../../hooks/useErrorHandler'
 import { ROUTES, PERCENT_OPTIONS, DEFAULT_PERCENT } from '../../constants'
+import useSpeechRecognition from '../../hooks/useSpeechRecognition'
+import { FaMicrophone, FaStop } from 'react-icons/fa'
 
 registerLocale('ru', { ...ru, options: { ...ru.options, weekStartsOn: 1 } })
 
@@ -34,6 +36,8 @@ export default function AddUpdateVisit() {
   const [info, setInfo] = useState('')
 
   const [clinics, setClinics] = useState([])
+  const { isListening, transcript, error: speechError, isSupported, startListening, stopListening } = useSpeechRecognition()
+  const infoBeforeSpeechRef = useRef('')
 
   useEffect(() => {
     clearError()
@@ -95,6 +99,22 @@ export default function AddUpdateVisit() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visitId, patientId])
+
+  useEffect(() => {
+    if (transcript) {
+      const prefix = infoBeforeSpeechRef.current
+      setInfo(prefix ? prefix + ' ' + transcript : transcript)
+    }
+  }, [transcript])
+
+  const handleMicClick = () => {
+    if (isListening) {
+      stopListening()
+    } else {
+      infoBeforeSpeechRef.current = info
+      startListening()
+    }
+  }
 
   const saveVisit = (e) => {
     e.preventDefault()
@@ -273,7 +293,23 @@ export default function AddUpdateVisit() {
                 </div>
                 <br></br>
                 <div className='form-group'>
-                  <label>Info:</label>
+                  <label>
+                    Info:
+                    {isSupported && (
+                      <button
+                        type='button'
+                        className={`btn btn-sm rounded-circle ms-2 ${isListening ? 'btn-danger voice-btn-recording' : 'btn-info'}`}
+                        onClick={handleMicClick}
+                        title={isListening ? 'Остановить запись' : 'Голосовой ввод'}
+                        style={{ width: '32px', height: '32px', padding: 0, verticalAlign: 'middle' }}
+                      >
+                        {isListening ? <FaStop size={12} /> : <FaMicrophone size={14} />}
+                      </button>
+                    )}
+                  </label>
+                  {speechError && (
+                    <div className='text-danger small mb-1'>{speechError}</div>
+                  )}
                   <textarea
                     name='info'
                     className='form-control'
